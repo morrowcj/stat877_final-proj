@@ -1,6 +1,6 @@
 # data file descriptions
 
-All files with the `wisasp_gwa-data` prefix are the data files. Below
+All files with the `gwa-files/wisasp_gwa-data` prefix are the data files. Below
 are descriptions of each file according to the file extention
 
 * `.bed`: binary file containing genotype information for each genet*SNP
