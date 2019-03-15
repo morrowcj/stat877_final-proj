@@ -19,7 +19,7 @@ Aspen.Leaf.Beetle
 Green.Sawfly
 Cotton.Scale
 
-## Insect density (continuous)
+## Insect density = insect abundance/time surveyed
 Same species as above
 
 ## other
@@ -44,6 +44,10 @@ Row
 Column
 Year
 time of year (survey event)
+temperature
+weather event
 source lattitude
 source longitude
 
+# Offset
+Min.per.Tree (time each tree was surveyed for)

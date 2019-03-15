@@ -1,20 +1,136 @@
 ---
 title: "Evaluating the Effects of Aspen Genetics on Insect Communities"
-subtitle: "Project Draft"
-author: 
-  - Clay Morrow
-  - Ting-Fung Ma
+author:
+- Clay Morrow
+- Ting-Fung Ma
 date: "March 15, 2019"
-output: 
+output:
+  pdf_document: default
   html_document:
-    code_folding: "hide"
-
-tags: NULL
-abstract: NULL
-
-params: NULL
+    code_folding: hide
+bibliography: null
+params: null
+subtitle: Project Draft
+tags: null
+abstract: null
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
+
+# Introduction
+<!-- clear statement of problem(s) being addressed, why doing so is 
+interesting/important, -->
+
+Plant-insect interactions have traditionally been viewed through the lens of 
+single species interactions (one plant and one insect) or interactions between 
+whole communities. In particular, the effects of interspecific variation 
+have been a focal point of community ecology in general (Power et al 1996)
+and in studies of plant-insect interactions. However, the contribution of 
+intraspecific variation was largely ignored. In recent decades, more attention 
+has been given to the effects that variation in individual species can have on 
+entire associated communities (Des Roches et al 2017; Koricheva and Hayes 2018)
+and a recent meta-analysis showed that intraspecific trait variation
+contributed significantly (25%,on average) to plant community trait variation 
+world-wide (Siefert et al 2015). 
+
+The interest in single-species effects on communities led to the development of 
+a new field of study: community genetics. Proposed by Antonovics (1992), 
+community genetics explores the effects of intraspecific variation on 
+communities. This approach provides a means to understanding plant-insect 
+interactions more completely than historical approaches. Research in this 
+field has determined that different plant genotypes can have a strong 
+influence on the composition and diversity of associated insect communities
+by way of phenotypic trait expression (Whitham et al 2003, 2008; 
+Wimp et al 2005; Bangert et al 2008; Meneses et al 2012; Gosney et al 2017).
+**However, specific phenotypic traits, and suites thereof, that most influence 
+insect communities remain poorly understood.** Even relatively simple insect 
+communities, with only a few constituent taxa, are likely impacted by many host
+plant traits. Yet most plant-insect community genetics studies focus on only 
+genotype differences and broad-sense heritability of communities without 
+investigating the mechanisms that drive those differences. Studies in which
+phenotypic trait data have been collected have considered only a few traits,
+leaving an incomplete understanding of the complete phenotypic mechanisms 
+through which genetic differences act on communities (Hersch-Green et al 
+2011; Crutsinger 2016).
+
+To address phenotypic mechanisms of genotype-based community effects, we propose
+to evaluate the combined effects that plant genetics and traits have in 
+shaping associated insect herbivore communities, using a *Populus* 
+experimental system. To this end, we will use a model-based approach to test 
+the collective effects of (1) *Populus tremuloides* (aspen) genotype at various 
+SNPs, (2) various aspen traits including size and defense traits, and (3) 
+various environmental factors including weather and time on the abundance of 
+18 common insect species.
+
+# Background
+<!--  background specifying what has been done in this area -->
+
+## Community genetics: state of the field
+
+The success of herbivorous insects is largely determined by physical and 
+chemical characteristics of their host plants, many of which are genetically 
+mediated (heritable). Even before the advent of community genetics, 
+ecologists recognized that species genetics can influence communities. 
+These effects were termed extended phenotypes (EP) (Dawkins 1982; 
+Antonovics 1992), a term that is still used by community genetics 
+investigators (Whitham et al 2003). Though plant genes do affect insect 
+communities, they do not do so directly as in typical phenotypic expression. 
+Instead, communities respond to plant phenotypes that are mediated by genes.
+Phenotypic traits, then, are the mechanisms of community genetic 
+effects (Hersch-Green et al 2011; Crutsinger 2016). 
+
+<!-- Needed? -->
+<!-- Morphological and  -->
+<!-- physiological plant traits that are likely to influence insect performance  -->
+<!-- are those that affect quality and availability of the plant as a food  -->
+<!-- resource.The available quantitiesof suitable host plant species can have  -->
+<!-- significant impacts on individual insects and insect communities.  -->
+<!-- Plant biomass is positively correlated with total insect abundance  -->
+<!-- (Haddad et al 2001)and increasing leaf biomass is linked toincreasing  -->
+<!-- insect herbivore abundance and species richness (Marques et al 2000). -->
+<!-- Drivers of that trend includespecific heritable plant traits such as  -->
+
+Additionally, expression of individual traits can be constrained by other 
+traits. High levels of expression in one trait can predispose a plant to low 
+expression of a different trait. Co-expression of chemical defense and growth, 
+for example, are limited by allocational and genetic costs (Sampedro 2014; 
+Eichenberg et al 2015; Züst and Agrawal 2017). Therefore, the interaction of 
+heritable plant traits, in addition to individual traits, may be key to 
+shaping insect communities.
+
+Many studies have shown genotype-mediated  differences among plant-associated
+insect communities (Whitham et al 2003; Johnson and Agrawal 2005; 
+Bangert et al 2006; Wimp et al 2010) but few have incorporated genetics and
+phenotypic expression to do so. Fewer still have used a wide range of
+naturally co-occurring genotypes and respective phenotypic variation. Studies 
+meeting these criteria are needed to understand the capacity of a natural 
+system for community genetic effects (Crutsinger 2016). Additionally, 
+specific plant phenotypes and genotypes to which insect communities are most 
+sensitive have not been investigated thoroughly in a community genetics 
+context (with notable exceptions for phenotypes such as chemical defenses: see 
+Gosney et al, 2017) (Hersch-Green et al 2011; Crutsinger 2016). Chemical, 
+physical, and phenological plant traits, the genetic information that regulates
+these traits, and their interactions, all influence the structure and 
+composition of associated insect communities. It is, therefore, important 
+to investigate the effects of multiple plant traits with high levels of 
+intraspecific variation. Furthermore, it is important to study plants from a 
+population of genetically variable and naturally co-occurring genets of a 
+foundation species such as aspen.
+
+<!-- populus as a study system? -->
+
+# Methods
+<!-- sketch on details of approaches that will be used -->
+
+## Data Collection
+
+## Statistical Analyses
+
+We will use quantitative-trait genome wide association (GWA) methods to assess 
+the effects of aspen genotype, at $114,420$ SNP locations, on 18 herbivorous 
+insect species. Best linear unbiased predictors (BLUPs) of each trait will be 
+calculated for each genotype using generalized liner mixed effects models 
+(GLMMs). These BLUPs will then be used as the quantitative trait covariates 
+in the association regression analysis. Additionally, 
