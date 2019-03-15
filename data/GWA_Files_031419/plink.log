@@ -1,0 +1,45 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Skipping web check... [ --noweb ] 
+Writing this text to log file [ plink.log ]
+Analysis started: Fri Mar 15 11:37:34 2019
+
+Options in effect:
+	--bed wisasp_gwa-data.bed
+	--fam wisasp_gwa-data.fam
+	--bim wisasp_gwa-data.bim
+	--noweb
+	--allow-no-sex
+
+Reading map (extended format) from [ wisasp_gwa-data.bim ] 
+114420 markers to be included from [ wisasp_gwa-data.bim ]
+Reading pedigree information from [ wisasp_gwa-data.fam ] 
+458 individuals read from [ wisasp_gwa-data.fam ] 
+0 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+0 cases, 0 controls and 458 missing
+0 males, 0 females, and 458 of unspecified sex
+Warning, found 458 individuals with ambiguous sex codes
+Writing list of these individuals to [ plink.nosex ]
+Reading genotype bitfile from [ wisasp_gwa-data.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Before frequency and genotyping pruning, there are 114420 SNPs
+458 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 1
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 114420 SNPs
+After filtering, 0 cases, 0 controls and 458 missing
+After filtering, 0 males, 0 females, and 458 of unspecified sex
+
+Analysis finished: Fri Mar 15 11:37:36 2019
+

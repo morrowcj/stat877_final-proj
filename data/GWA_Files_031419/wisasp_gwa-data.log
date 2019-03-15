@@ -1,0 +1,32 @@
+PLINK v1.90b4.6 64-bit (15 Aug 2017)
+Options in effect:
+  --allow-no-sex
+  --file WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute
+  --make-bed
+  --out WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute
+
+Hostname: linlabzorin
+Working directory: /home/jriehl/Documents/WisAsp_Project/SNP_filtering_Spring2019/Step_Five
+Start time: Wed Mar 13 23:36:23 2019
+
+Random number seed: 1552538183
+32097 MB RAM detected; reserving 16048 MB for main workspace.
+Scanning .ped file... done.
+Performing single-pass .bed write (114420 variants, 458 people).
+--file: WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute-temporary.bed +
+WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute-temporary.bim +
+WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute-temporary.fam written.
+114420 variants loaded from .bim file.
+458 people (0 males, 0 females, 458 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 458 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+114420 variants and 458 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute.bed +
+WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute.bim +
+WisAsp_all_rounds_jointcall_StepFive_plink_LinkImpute.fam ... done.
+
+End time: Wed Mar 13 23:36:26 2019

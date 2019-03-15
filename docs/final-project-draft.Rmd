@@ -1,0 +1,20 @@
+---
+title: "Evaluating the Effects of Aspen Genetics on Insect Communities"
+subtitle: "Project Draft"
+author: 
+  - Clay Morrow
+  - Ting-Fung Ma
+date: "March 15, 2019"
+output: 
+  html_document:
+    code_folding: "hide"
+
+tags: NULL
+abstract: NULL
+
+params: NULL
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```

@@ -1,0 +1,5 @@
+.Rhistory
+.RData
+*.Rproj*
+*.zip
+*.ped
