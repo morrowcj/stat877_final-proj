@@ -1,16 +1,17 @@
 ---
-title: "Evaluating the Effects of Aspen Genetics on Insect Communities"
-author:
-- Clay Morrow
-- Ting-Fung Ma
+title: "Evaluating the Effects of Aspen Genetics on Insect Communities - Draft"
+# subtitle: "Project Draft"
+author: "Clay Morrow and Ting-Fung Ma"
 date: "March 15, 2019"
 output:
   pdf_document: default
   html_document:
     code_folding: hide
+
+
 bibliography: null
 params: null
-subtitle: Project Draft
+
 tags: null
 abstract: null
 ---
@@ -20,6 +21,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 # Introduction
+<!-- Much of this is taken from my thesis proposal -->
+
 <!-- clear statement of problem(s) being addressed, why doing so is 
 interesting/important, -->
 
@@ -119,18 +122,143 @@ intraspecific variation. Furthermore, it is important to study plants from a
 population of genetically variable and naturally co-occurring genets of a 
 foundation species such as aspen.
 
-<!-- populus as a study system? -->
+<!-- Necessary section? -->
+## **Populus tremuloides** as a study system  
+
+Trembling aspen is an ideal species for studying the interactions between 
+genetics, traits, and insects because of its role in shaping insect communities.
+Community genetic effects of plants in a system are most likely to occur when: 
+1) The plant is a foundation species in the system, 2) the plant species has 
+high levels of heritable variation in many traits, and 3) communities (insects)
+that are associated with the plant have many potential members that are 
+differentially sensitive to plant traits (Antonovics 1992; Bailey et al 2006; 
+Whitham et al 2006; Bangert et al 2008; Crutsinger 2016). Aspen satisfy all 
+these criteria.
+
+Aspen are considered a foundation species in North America and support some of 
+the most biologically diverse communities in the US (Mitton and Grant 1996; Kay 
+1997; Madritch et al 2009; Kuhn et al 2011). The importance of aspen as a driver 
+of biodiversity is even more pronounced when the scale at which it acts is 
+considered; aspen is the most widely distributed tree species in all of North 
+America (Little and Viereck 1971; Mitton and Grant 1996). Their extensive 
+range necessitates interactions with a variety of different communities and 
+locales and their high biomass potential allows them to support large 
+communities.  
+
+Aspen also exhibits a tremendous amount of phenotypic trait variation (Mitton 
+and Grant 1996; Donaldson et al 2006; Lindroth and St Clair 2013) which 
+provides an opportunity to study consequences of intraspecific variation for 
+insect herbivore communities. Variation in traits means variation in quality 
+and quantity of aspen as a food resource, which leads to variation in 
+performance and abundance of aspen-associated insect herbivores (Hwang and 
+Lindroth 1997; Lindroth et al 1999, 2007; Meneses et al 2012).  
+
+Chemical defenses, for example, are among the most well-studied heritable aspen 
+traits, in terms of variation and significance, that affect insect performance 
+and influence communities (Erwin et al 1994; Lindroth et al 1999, 2007; Wimp 
+et al 2007). Two predominant classes of aspen secondary metabolites are 
+condensed tannins (CTs) and phenolic glycosides (PGs). Some variation in aspen 
+traits such as PG and CT concentrations may be attributed to allocational, 
+genetic, or phenological costs to other traits and phenotypic plasticity 
+(Stevens and Lindroth 2005; Osier and Lindroth 2006). An example of plasticity 
+can be seen with secondary metabolites of aspen which can be both constitutive 
+and inducible (Osier and Lindroth 2001; Rubert-Nason et al 2015). This means 
+that genotype and the environment (insect herbivores) interact to influence 
+the expression of resistance compounds within a plant. Allocational costs to 
+trait expression are likely contributors to the strong growth-defense tradeoffs 
+documented in aspen (Hwang and Lindroth 1997; Donaldson et al 2005; Osier and 
+Lindroth 2006; Cole et al 2016). 
+<!-- uneeded -->
+<!-- Many herbivorous generalist and specialist insects, spanning a wide range of  -->
+<!-- taxa, utilize aspen as a food resource (Dickmann and Stuart 1983; Baranchikov  -->
+<!-- et al 1989; Barker 2015). These aspen-associated herbivorous taxa span a range  -->
+<!-- of feeding guilds that use different parts of the plant, in different ways. PGs  -->
+<!-- in aspen, for example, are effective at reducing performance of generalists,  -->
+<!-- especially lepidopteran generalists (Lindroth and Bloomer 1991; Hwang and  -->
+<!-- Lindroth 1997; Roth et al 1997; Hemming and Lindroth 2000). However, the same  -->
+<!-- compounds may be less effective, or even confer benefits, to specialists such  -->
+<!-- as chrysomelid beetles (Donaldson and Lindroth 2004; Vigue and Lindroth 2010).  -->
+<!-- Differential use of aspen, then, should result in different effects of  -->
+<!-- quality-related traits, on different insect guilds and taxa, that manifest as  -->
+<!-- community differences (Ali and Agrawal 2012; Mason et al 2017).  -->
 
 # Methods
 <!-- sketch on details of approaches that will be used -->
 
 ## Data Collection
 
+### Experimental Design
+
+**WisAsp population:** the Lindroth research group has established the 
+"Wisconsin Aspen Genetic Mapping Population" (WisAsp), a common garden 
+plantation of *Populus tremuloides*, in 2010. WisAsp provides a unique 
+opportunity to use many genetically and phenotypically diverse genets of aspen 
+to test potential natural insect community differences. WisAsp exhibits high 
+variation in many traits, including tree size, phenology, and chemical 
+composition<!-- (Figure 1)-->.
+Additionally, a wide range of generalist and specialist 
+insect associates have become established at the common garden,including taxa 
+from at least 7 orders and 125 species (Morrow, unpublished data; Barker, 2015). 
+Common feeding guilds of the insects present at WisAsp include leaf-chewing, 
+leaf-mining, leaf-galling, phloem-feeding, and wood-boring insects. The 
+diversity of insects that utilize the WisAsp trees providesan opportunity to 
+test the effects of specific traits on specific insect guilds and taxa as well 
+as to test the overall effects on complex communities.
+
+The garden contains 517 genotypes, with an average of three clonal replicate 
+trees (ramets) per genotype for a total of 1,568 experimental ramets. The 
+experimental trees are buffered from the external environment by a border of 255 
+non-experimental trees. The trees from each genotype were planted as cuttings 
+collected from a contiguous section of root material. Genotypes were collected 
+from 13 counties throughout the state of WI<!-- (Figure 2)-->. 
+The experimental ramets were arranged in a randomized complete block design 
+with 4 blocks. Replants were conducted in 2011 and 2012 to replace trees that 
+died in previous years. These replants resulted in replacement of 147 trees
+belonging to diferent genets and an nonuniform age structure of the plot. 
+
+### Data collection
+
+Data were collected on tree genetics, traits, and associated insect communities.
+Insect community data were collected by conducting visual surveys of 
+insect herbivores on the lower third of each tree's canopy. <!-- The survey 
+boundary was chosen due to constraints imposed by the number of trees and large 
+size of each tree as well as the short duration of the surveys. Species 
+rarefaction estimates (Sanders 1968; Simberloff 1972; Gotelli and Colwell 
+2011) collected one week prior to the first insect survey showed no 
+difference in species richness among the top, middle, or bottom thirds of the 
+trees, justifying this census approach.--> Trees were surveyed for a 
+predetermined duration, with 3-minute minimum and 10-minute maximum caps, 
+based on relative height, to estimate insect density (as a function of time).
+out of 220 total species of insects, 18 were identified as common (occured on 
+$\geq 5$ trees in each survey event) and will be used in the analysis.
+Phytochemical analyses were conducted on leaf tissue from each ramet at each 
+insect survey event. PGs were extracted from leaf tissue and quantified using 
+UHPLC-mass spectrometry following methods of Abreu, modified by the Lindroth 
+Lab (Abreu et al 2011; F Rubert-Nason et al 2017). CTs were extracted and 
+quantified following the methods of Porter/Hagerman (Porter et al 1985; 
+Hagerman and Butler 1989). Carbon and Nitrogen concentrations were quantified 
+using near infrared spectroscopy (NIRS) with nitrogen analyzer calibration 
+(Rubert-Nason et al 2013). All phytochemical extractions were done on leaves
+that had been vacuume-dried for 48 hours. Other tree traits quantified (volume, 
+basal area, number of flowers, sex, leaf area, bud break timing, and 
+extra-floral nectaries) were done so using standard 
+methods (**references needed**). SNP genotype data were collected using 
+standard methods (**reference needed**).
+
 ## Statistical Analyses
 
 We will use quantitative-trait genome wide association (GWA) methods to assess 
 the effects of aspen genotype, at $114,420$ SNP locations, on 18 herbivorous 
-insect species. Best linear unbiased predictors (BLUPs) of each trait will be 
-calculated for each genotype using generalized liner mixed effects models 
-(GLMMs). These BLUPs will then be used as the quantitative trait covariates 
-in the association regression analysis. Additionally, 
+insect species. Best linear unbiased predictors (BLUPs) for each of 7 
+quantitative tree traits will be calculated for each genotype using generalized 
+liner mixed effects models (GLMMs) using, `lme4::glmer()` in `R`. These BLUPs, 
+3 categorical tree traits, and 9 measured environmental factors will be used 
+as covariates in the association regression analysis. Association regression
+will be conducted using `plink` and the `qtl` package in `R` (only if there are 
+enough SNPs with relatively even homozygous:heterozygous genotype groups 
+$\approx 50:50$). Other methods will also be considered, as `plink` does not
+allow for interaction terms in its regression analyses.
+
+# Reference
+
+Bibliography to come later. 
