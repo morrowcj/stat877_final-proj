@@ -5,3 +5,6 @@
 *.ped
 *.tex
 .Rproj.user
+data/WisAsp_*.csv
+snp-genet-lookup.*
+PreparingPheno*
