@@ -8,7 +8,7 @@ index,column.name,corresponding.MD.names,variable.type,variable.subtype,variable
 7,Position,Position,Environmental,Exp.Design,factor,Column within plot
 8,Latitude,Latitude,Environmental,Source.Location,numeric,latitude where the source material was collected
 9,Longitude,Longitude,Environmental,Source.Location,numeric,longitude where the source material was collected
-10,Min.per.Tree,Min.per.Tree,Offset,Exp.Design,integer,Density = <Insect>/Min.per.Tree
+10,Min.per.Tree,Min.per.Tree,Offset,Exp.Design,integer,the amount of time the tree was surveyed for (Density = <Insect>/Min.per.Tree)
 11,Harmandia,Harmandia,Insect,Common,integer,# of individuals found during Min.per.Tree
 12,Phyllocolpa,Phyllocolpa,Insect,Common,integer,# of individuals found during Min.per.Tree
 13,Petiole.Gall,Petiole.Gall,Insect,Common,integer,# of individuals found during Min.per.Tree
