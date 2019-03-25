@@ -1,0 +1,47 @@
+index,column.name,corresponding.MD.names,variable.type,variable.subtype,variable.class,note
+1,Genet,Genet,Environmental,ID,factor,Genet of the tree
+2,id,id,Environmental,ID,factor,GWA sample ID for the Genet
+3,SerialNo,SerialNo,Environmental,ID,factor,Individual Tree Identifier
+4,Unique.ID,Unique.ID,Environmental,ID,factor,Observation ID (= <SerialNo>.<survey.event>
+5,Block,Block,Environmental,Exp.Design,factor,Block within plot
+6,Row,Row,Environmental,Exp.Design,factor,Row within Block
+7,Position,Position,Environmental,Exp.Design,factor,Column within plot
+8,Latitude,Latitude,Environmental,Source.Location,numeric,latitude where the source material was collected
+9,Longitude,Longitude,Environmental,Source.Location,numeric,longitude where the source material was collected
+10,Min.per.Tree,Min.per.Tree,Offset,Exp.Design,integer,Density = <Insect>/Min.per.Tree
+11,Harmandia,Harmandia,Insect,Common,integer,# of individuals found during Min.per.Tree
+12,Phyllocolpa,Phyllocolpa,Insect,Common,integer,# of individuals found during Min.per.Tree
+13,Petiole.Gall,Petiole.Gall,Insect,Common,integer,# of individuals found during Min.per.Tree
+14,Leaf.Edge.Mine,Leaf.Edge.Mine,Insect,Common,integer,# of individuals found during Min.per.Tree
+15,Blotch.Mine,Blotch.Mine,Insect,Common,integer,# of individuals found during Min.per.Tree
+16,Lombardy.Mine,Lombardy.Mine,Insect,Common,integer,# of individuals found during Min.per.Tree
+17,Weevil.Mine,Weevil.Mine,Insect,Common,integer,# of individuals found during Min.per.Tree
+18,Blackmine,Blackmine,Insect,Common,integer,# of individuals found during Min.per.Tree
+19,Cottonwood.Leaf.Mine,Cottonwood.Leaf.Mine,Insect,Common,integer,# of individuals found during Min.per.Tree
+20,Casebearer.Moth,Casebearer.Moth,Insect,Common,integer,# of individuals found during Min.per.Tree
+21,Leafhoppers,Leafhoppers,Insect,Common,integer,# of individuals found during Min.per.Tree
+22,Green.Aphids,Green.Aphids,Insect,Common,integer,# of individuals found during Min.per.Tree
+23,Smokey.Aphids,Smokey.Aphids,Insect,Common,integer,# of individuals found during Min.per.Tree
+24,Ants,Ants,Insect,Common,integer,# of individuals found during Min.per.Tree
+25,Pale.Green.Notodontid,Pale.Green.Notodontid,Insect,Common,integer,# of individuals found during Min.per.Tree
+26,Aspen.Leaf.Beetle,Aspen.Leaf.Beetle,Insect,Common,integer,# of individuals found during Min.per.Tree
+27,Green.Sawfly,Green.Sawfly,Insect,Common,integer,# of individuals found during Min.per.Tree
+28,Cotton.Scale,Cotton.Scale,Insect,Common,integer,# of individuals found during Min.per.Tree
+29,Survey.Year,Survey.Year,Environmental,Exp.Design,Date,2016 or 2017
+30,survey.event,survey.event,Environmental,Exp.Design,factor,"one of 4 survey periods “jun16”,”aug16”,”jun17”, or ”aug17”"
+31,Date,Date,Environmental,Exp.Design,Date,"date on which the tree was surveyed for insects (confounded with Block, Row, Position)"
+32,Sex.Genet,Sex.Genet,Trait,Physical,factor,sex of the genet
+33,PlantingDate,PlantingDate,Trait,Age,factor,date on which the tree was planted from source material
+34,Volume,Volume,Trait,Physical,numeric,volume of the tree
+35,ALA.all,ALA.all,Trait,Physical,numeric,average leaf area of the tree
+36,SLA.all,SLA.all,Trait,Physical,numeric,standardized leaf area of the tree 
+37,BBreakDegDay.all,BBreakDegDay.all,Trait,Phenology,numeric,degree days at which the tree’s leaves became fully opened
+38,EFNMean.all,EFNMean.all,Trait,Physical,numeric,average extra-floral nectaries per leaf of the tree
+39,CTsum,CTsum,Trait,Chemistry,numeric,condensed tannins %
+40,PGsum,PGsum,Trait,Chemistry,numeric,phenolic glycosides %
+41,Npct.all,Npct.all,Trait,Chemistry,numeric,Nitrogen %
+42,Cpct.all,Cpct.all,Trait,Chemistry,numeric,Carbon %
+43,thunderstorm.event,thunderstorm.event,Environmental,Weather,factor,
+44,avg.temp_F,avg.temp_F,Environmental,Weather,numeric,
+45,rain.event,rain.event,Environmental,Weather,factor,
+46,fog.event,fog.event,Environmental,Weather,factor,
