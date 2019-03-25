@@ -2,7 +2,7 @@ index,column.name,corresponding.MD.names,variable.type,variable.subtype,variable
 1,Genet,Genet,Environmental,ID,factor,Genet of the tree
 2,id,id,Environmental,ID,factor,GWA sample ID for the Genet
 3,SerialNo,SerialNo,Environmental,ID,factor,Individual Tree Identifier
-4,Unique.ID,Unique.ID,Environmental,ID,factor,Observation ID (= <SerialNo>.<survey.event>
+4,Unique.ID,Unique.ID,Environmental,ID,factor,Observation ID (= <SerialNo>.<survey.event>)
 5,Block,Block,Environmental,Exp.Design,factor,Block within plot
 6,Row,Row,Environmental,Exp.Design,factor,Row within Block
 7,Position,Position,Environmental,Exp.Design,factor,Column within plot
