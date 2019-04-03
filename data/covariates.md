@@ -43,8 +43,9 @@ See above
 
 ## environmental factors
 ### ID variables
-`Genet`
-`id` (gwas sample names)
+`FID` same as in `.fam` file
+`IID` same as in `.fam` file
+`Genet` (genet names, short)
 `SerialNo` (individual tree ID)
 `Unique.ID` (observation ID, == <SerialNo>.<survey.event>)
 `Block` (block within plot)
