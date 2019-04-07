@@ -1,0 +1,147 @@
+---
+title: "Evaluating the Effects of Aspen Genetics on Insect Communities - Specimen of R code"
+author: "Clay Morrow and Ting-Fung Ma"
+date: "April 7, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+This document includes specimen of R code for fitting GLMM on the binary phenotype. The core computation is performed on CHTC which utilize a large number of threads for distributed computing.
+
+## R packages
+```{r,message=FALSE, warning=FALSE}
+library(data.table) # fast load data
+library(lme4) # glmm
+
+library(foreach) # parallel
+```
+
+## Data loading
+```{r, warning=FALSE}
+phen.covar <- fread("phenos-and-covars.txt")
+snp <- fread("gwas-flat.ped")[,-(2:6)] # drop some columns
+bim <- fread("wisasp_gwa-data.bim")
+
+# Rename column by SNP name
+data.table::setnames(snp,old=names(snp), new = c("FID",
+        unname(unlist(bim[,2]))))
+
+genet.name <- unlist(snp[,1])
+
+# Rename Genet name (FID), remove .bam
+for (i in 1:458) {
+tmp <- substr(genet.name[i],nchar(genet.name[i])-3,nchar(genet.name[i]))
+if (tmp == ".bam") {
+  genet.name[i] <- substr(genet.name[i], 1, nchar(genet.name[i])-4)
+}
+}
+
+snp[,1] <- genet.name
+
+# Remove extra row in phenos-and-covar
+phen.covar <- phen.covar[phen.covar$FID %in% genet.name,]
+```
+
+We removed the phenotype records without SNP data and remove the ".bam" in the genet name.
+
+```{r}
+dim(phen.covar)
+dim(snp)
+summary(as.numeric(table(phen.covar$FID)))
+```
+
+The entire dataset for analysis has 5656 trees within the 458 genets. The number of trees in a genets varies from 4 to 24. The number of SNPs for analysis is 114420.
+
+## GWAS for presence of insect
+
+In this section, we adopt a GLMM model to perform a GWAS study. For simplicity, the phenotype is presence of a particular kind of insect. In particular, Harmandia is considered. The random effect controls the effect of common genetic material within the genet. 
+
+Also, we assume an additive effect on the SNPs.
+
+
+**Clay: Please check if I code correctly, I count how many of the allele equals the reference allele from the bim file. Moreover, it seems that the parallel loop does not speed up too much.**
+
+
+The number of allele is calculated by:
+```{r, eval=FALSE}
+# Calculate no. allele
+cl <- makeCluster(detectCores() - 2)
+
+t0 <- proc.time()
+SNP.add <- foreach(i = 2:114421, .combine=cbind) %dopar% {
+  tmp <- unname(unlist(snp[,..i]))
+  # Reference allele from .bim
+  ref.allele <- unlist(bim[i-1,5])
+  (substr(tmp,start=1,stop=1) == ref.allele) +
+    (substr(tmp,start=3,stop=3) == ref.allele)
+}
+
+stopCluster(cl)
+
+proc.time() - t0
+
+SNP.add <- as.data.frame(SNP.add)
+colnames(SNP.add) <- names(snp)[-1]
+rownames(SNP.add) <- snp$FID
+```
+
+
+We further transform the covariate, such as age of tree is calculated by the difference between ("PlantingDate" - "Date")/365.25. Since majority of "Npct.all"" and "Cpct.all" (4252 out of 5656) are missing, we exclude these two covariates for much larger sample size. 
+
+```{r, eval=FALSE}
+# Harmandia, col 12
+y <- 1*(phen.covar[,12]>0)
+
+tmp.data <- phen.covar[,c(1,30,35,36:43)]
+
+# Age calculation
+Age <- as.numeric(as.Date(unlist(phen.covar[,32]),format="%Y-%m-%d") -
+                    as.Date(unname(unlist(phen.covar[,34])),format="%m/%d/%Y"))/365.25
+
+tmp.data <- cbind(y, tmp.data, Age)
+colnames(tmp.data)[1] <- "y"
+
+tmp.data <- as.data.frame(tmp.data)
+
+standardize <- function(x) { (x - mean(x,na.rm=TRUE))/sd(x, na.rm=TRUE)}
+
+
+for (i in 4:13) {
+  tmp.data[,i] <- standardize(tmp.data[,i])
+}
+
+# save(tmp.data, SNP.add, file="stat877.RData")
+```
+
+
+We fit mixed model and store the p-values for all SNPs.
+```{r,eval=FALSE}
+snp.no <- 1
+
+cl <- makeCluster(detectCores() - 2)
+
+t0 <- proc.time()
+p.value <- foreach(snp.no = 1:10, .combine=c) %dopar% {
+lookup <- data.frame(FID=rownames(SNP.add),
+                     snp=SNP.add[,snp.no])
+
+tmp.data2 <- merge(lookup, tmp.data, by = 'FID')
+
+m <- glmer(y ~ snp  + Volume + ALA.all +
+        SLA.all + BBreakDegDay.all + EFNMean.all +
+        CTsum + PGsum  + Age
+        # Npct.all + Cpct.all # 
+      + (1|FID), family = binomial, data=tmp.data2)
+
+summary(m)$coef[2,4] # p-value of SNP 
+}
+stopCluster(cl)
+
+proc.time() - t0
+```
+
+
