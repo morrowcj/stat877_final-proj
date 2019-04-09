@@ -5,7 +5,7 @@ args = (commandArgs(trailingOnly=TRUE))
 ind <- as.numeric(args[1]) # get the job number to run the corresponding 20 SNPs
 
 
-load("stat877.RData")
+load("harmandia.RData")
 
 library(lme4)
 
@@ -23,7 +23,7 @@ tmp.data2 <- merge(lookup, tmp.data, by = 'FID')
 m <- glmer(y ~ snp  + Volume + ALA.all +
         SLA.all + BBreakDegDay.all + EFNMean.all +
         CTsum + PGsum  + Age
-      + (1|FID), family = binomial, data=tmp.data2)
+      + (1|survey.event/FID), family = binomial, data=tmp.data2)
 
 result[i,1]  <- names(SNP.add)[snp.no]
 result[i,-1] <-  summary(m)$coef[-1,4]

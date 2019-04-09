@@ -22,14 +22,14 @@ output = ./stat877/harmandia_$(Process).out
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
 
-transfer_input_files = R_ML2.tar.gz, stat877.RData, harmandia.r
+transfer_input_files = R_ML2.tar.gz, harmandia.RData, harmandia.r
 #
 # Tell HTCondor what amount of compute resources
 #  each job will need on the computer where it runs.
 
 request_cpus = 1
-request_memory = 500MB
-request_disk = 200MB
+request_memory = 600MB
+request_disk = 600MB
 
 # Tell HTCondor to run N instances of our job (each jobs corresponds to 20 combination , total 216000/25
 queue  5721
