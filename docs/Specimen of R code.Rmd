@@ -16,8 +16,6 @@ This document includes specimen of R code for fitting GLMM on the binary phenoty
 ```{r,message=FALSE, warning=FALSE}
 library(data.table) # fast load data
 library(lme4) # glmm
-
-library(foreach) # parallel
 ```
 
 ## Data loading
@@ -67,22 +65,17 @@ Also, we assume an additive effect on the SNPs.
 
 
 The number of allele is calculated by:
-```{r, eval=FALSE}
+```{r}
 # Calculate no. allele
-cl <- makeCluster(detectCores() - 2)
+SNP.add <- matrix(nr=458, nc=114420)
 
-t0 <- proc.time()
-SNP.add <- foreach(i = 2:114421, .combine=cbind) %dopar% {
+for(i in 2:114421) {
   tmp <- unname(unlist(snp[,..i]))
   # Reference allele from .bim
   ref.allele <- unlist(bim[i-1,5])
-  (substr(tmp,start=1,stop=1) == ref.allele) +
+  SNP.add[,i-1] <- (substr(tmp,start=1,stop=1) == ref.allele) +
     (substr(tmp,start=3,stop=3) == ref.allele)
 }
-
-stopCluster(cl)
-
-proc.time() - t0
 
 SNP.add <- as.data.frame(SNP.add)
 colnames(SNP.add) <- names(snp)[-1]
@@ -92,11 +85,11 @@ rownames(SNP.add) <- snp$FID
 
 We further transform the covariate, such as age of tree is calculated by the difference between ("PlantingDate" - "Date")/365.25. Since majority of "Npct.all"" and "Cpct.all" (4252 out of 5656) are missing, we exclude these two covariates for much larger sample size. 
 
-```{r, eval=FALSE}
+```{r}
 # Harmandia, col 12
 y <- 1*(phen.covar[,12]>0)
 
-tmp.data <- phen.covar[,c(1,30,35,36:43)]
+tmp.data <- phen.covar[,c(1,30,31,35:43)]
 
 # Age calculation
 Age <- as.numeric(as.Date(unlist(phen.covar[,32]),format="%Y-%m-%d") -
@@ -110,22 +103,22 @@ tmp.data <- as.data.frame(tmp.data)
 standardize <- function(x) { (x - mean(x,na.rm=TRUE))/sd(x, na.rm=TRUE)}
 
 
-for (i in 4:13) {
+for (i in 5:14) {
   tmp.data[,i] <- standardize(tmp.data[,i])
 }
 
-# save(tmp.data, SNP.add, file="stat877.RData")
+# save(tmp.data, SNP.add, file="harmandia.RData")
 ```
 
 
-We fit mixed model and store the p-values for all SNPs.
-```{r,eval=FALSE}
+We fit mixed model and store the p-values for some SNPs.
+```{r, cache=TRUE}
 snp.no <- 1
 
-cl <- makeCluster(detectCores() - 2)
+p.value <- rep(NA,5)
 
-t0 <- proc.time()
-p.value <- foreach(snp.no = 1:10, .combine=c) %dopar% {
+# Run first 5 SNP for a trial
+for(snp.no in 1:5) {
 lookup <- data.frame(FID=rownames(SNP.add),
                      snp=SNP.add[,snp.no])
 
@@ -134,14 +127,15 @@ tmp.data2 <- merge(lookup, tmp.data, by = 'FID')
 m <- glmer(y ~ snp  + Volume + ALA.all +
         SLA.all + BBreakDegDay.all + EFNMean.all +
         CTsum + PGsum  + Age
-        # Npct.all + Cpct.all # 
-      + (1|FID), family = binomial, data=tmp.data2)
+        # Npct.all + Cpct.all # exclude these two variable due to missing
+      + (1|survey.event/FID), family = binomial, 
+      data=tmp.data2)
 
-summary(m)$coef[2,4] # p-value of SNP 
+p.value[snp.no] <- summary(m)$coef[2,4] # p-value of SNP 
 }
-stopCluster(cl)
 
-proc.time() - t0
+p.value
+
 ```
 
-
+There are some warnings about convergence of model fitting, probably due to the difficulty of optimizer.
