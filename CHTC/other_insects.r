@@ -50,4 +50,4 @@ p.value <- cbind(SNP.name, p.value)
 names(p.value) <- c("SNP.name", paste0("pval.",names(tmp.data2)[3:19]))
 
 
-write.csv(result,file=paste0("other_insects_",ind+1,".csv"), row.names = FALSE)
+write.csv(p.value, file=paste0("other_insects_",ind+1,".csv"), row.names = FALSE)
