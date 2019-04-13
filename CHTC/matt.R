@@ -19,7 +19,7 @@ title.name <- gsub("\\.", " ", substr(var.name,6, nchar(var.name)))
 
 cat(i, title.name,"\n")
 
-# After Bonferroni correction, add too lines for 0.1 and 0.01 FWER
+# After Bonferroni correction, add two lines for 0.1 and 0.01 FWER
 
 png(paste0("Manhattan plot of ", title.name,".png"), width=1080, height=540)
 manhattan(x=tmp, chr = "scaffold", bp = "base.pair",

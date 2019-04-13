@@ -19,7 +19,7 @@ title.name <- gsub("\\.", " ", substr(var.name,6, nchar(var.name)))
 
 cat(i, title.name,"\n")
 
-# After Bonferroni correction, add too lines for 0.1 and 0.01 FWER
+# After Bonferroni correction, add two lines for 0.1 and 0.01 FWER
 
 png(paste0("QQ plot of ", title.name,".png"), width=720, height=720)
 	
