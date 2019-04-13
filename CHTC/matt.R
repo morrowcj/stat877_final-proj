@@ -18,6 +18,8 @@ title.name <- sub("\\.", " ", substr(var.name,6, nchar(var.name)))
 
 png(paste0("Manhattan plot of ", title.name,".png"), width=1080, height=540)
 manhattan(x=tmp, chr = "scaffold", bp = "base.pair",
-		snp = "SNP.name", p=var.name, xlab = "Scaffold",main=paste("Manhattan plot of", title.name))
+		suggestiveline = -log10(0.1/114420), genomewideline = -log10(0.01/114420),
+		snp = "SNP.name", p=var.name, xlab = "Scaffold",
+		main=paste("Manhattan plot of", title.name))
 dev.off()
 }
