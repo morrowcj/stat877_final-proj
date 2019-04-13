@@ -21,11 +21,9 @@ cat(i, title.name,"\n")
 
 # After Bonferroni correction, add too lines for 0.1 and 0.01 FWER
 
-png(paste0("Manhattan plot of ", title.name,".png"), width=1080, height=540)
-manhattan(x=tmp, chr = "scaffold", bp = "base.pair",
-		suggestiveline = -log10(0.1/114420), genomewideline = -log10(0.01/114420),
-		ylim=c(0,10), cex.main=2,
-		snp = "SNP.name", p=var.name, xlab = "Scaffold",
-		main=paste("Manhattan plot of", title.name))
+png(paste0("QQ plot of ", title.name,".png"), width=720, height=720)
+	
+qq(tmp[,4], cex.main=2, main=paste("QQ plot of", title.name))
+		
 dev.off()
 }
