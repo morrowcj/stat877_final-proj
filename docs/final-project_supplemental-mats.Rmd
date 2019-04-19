@@ -1,5 +1,5 @@
 ---
-title: "Supplemental Material"
+title: "Supplemental Materials"
 author: "Clay Morrow and Ting-Fung Ma"
 date: "April 19, 2019"
 output: 
