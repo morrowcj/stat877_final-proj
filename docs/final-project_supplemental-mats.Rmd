@@ -2,17 +2,36 @@
 title: "Supplemental Material"
 author: "Clay Morrow and Ting-Fung Ma"
 date: "April 19, 2019"
-output: html_document
+output: 
+  html_document:
+    css: ../docs/html-format_css.txt
+    df_print: paged
+    toc: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      eval.after = 'fig.cap')
+
+knitr::opts_knit$set(root.dir = "../")
+data("significant-SNP-list")
 ```
 
+```{r insect names, include=FALSE}
+image.paths <- list.files("figures/q-manhattan_ggplot/")
+insects <- gsub(image.paths,pattern = "ggM.*plot_(.*)\\.png",replacement = "\\1")
+insects <- gsub(insects, pattern = "-", replacement = " ")
+insects <- gsub(insects, pattern = "Blackmine", replacement = "Blackmine Beetle")
+```
 
 # Supplemental Material
 
-```{r Table A snps of interest}
+This document contains supplemental materials for 
+[this project](final-project_results-summary.Rmd).
+
+## Table of SNPs of interest:
+
+```{r Table A snps of interest, fig.cap=caption}
 collapsed.list <- lapply(snp.insects, function(x){
   paste(x, collapse = ", ")
 })
@@ -25,23 +44,45 @@ for(i in names(collapsed.list)){
 }
 caption <- paste("SNPs of interest and the insects with which they have",
                  "significant associations")
-knitr::kable(table, row.names = FALSE, caption = caption)
+# knitr::kable(table, row.names = FALSE, caption = caption)
+rownames(table) <- NULL
+table
 ```
 
-```{r Fig A full manhattan plots, message=FALSE, fig.cap = caption, out.extra='angle=270', out.width="100%"}
-image.paths <- c(list.files("figures/q-manhattan_ggplot/"))
-insects <- gsub(image.paths,pattern = "ggM.*plot_(.*)\\.png",replacement = "\\1")
-insects <- gsub(insects, pattern = "-", replacement = " ")
-insects <- gsub(insects, pattern = "Blackmine", replacement = "Blackmine Beetle")
-caption <- c(rep(NA,length(image.paths) - 1),"caption for reals")
+`r caption`
 
-caption <- NULL
-for (i in 1:length(insects)) {
-  caption[insects[i]] <- paste0("Fig A.",i, ": Full Manhattan\n Plot of ",
-                                insects[i],". SNPs of interest are colored red")
-}
-par(mfrow = c(1,2))
-knitr::include_graphics(path = paste0("../figures/q-manhattan_ggplot/",
-                                      image.paths))
+## p value distributions
+
+```{r p histograms}
+image.paths <- normalizePath(file.path("figures/p-hist/",
+                                       list.files("figures/p-hist/",
+                                                  pattern = ".png")))
+knitr::include_graphics(image.paths)
+```
+
+
+## q value distributions
+```{r q histograms}
+image.paths <- normalizePath(file.path("figures/q-hist/",
+                                       list.files("figures/q-hist/",
+                                                  pattern = ".png")))
+knitr::include_graphics(image.paths)
+```
+
+## QQ plots
+```{r qqplots}
+image.paths <- normalizePath(file.path("figures/QQ/",
+                                       list.files("figures/QQ/",
+                                                  pattern = ".png")))
+knitr::include_graphics(image.paths)
+```
+
+## Full Manhattan-style plots
+
+```{r full manhattan plots, message=FALSE, fig.cap = caption, out.extra='angle=270', out.width="100%"}
+image.paths <- normalizePath(file.path("figures/q-manhattan_ggplot/",
+                                       list.files("figures/q-manhattan_ggplot/",
+                                                  pattern = ".png")))
+knitr::include_graphics(image.paths)
 ```
 

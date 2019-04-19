@@ -6,6 +6,7 @@ output:
   html_document:
     code_folding: hide
     css: ../docs/html-format_css.txt
+    toc: true
   pdf_document: default
 bibliography: null
 params:
@@ -132,7 +133,7 @@ common.3.n <- nrow(incommon.snps %>% filter(n.assoc > 2)) # 4
 ```
 
 Of the `r insect.n` common insects, `r ins.n` had significant associations.
-Among those significant associations, `r common.n` SNPs were significantly 
+Among those, `r common.n` SNPs were significantly 
 associated with at least 2 insects (**figure 1**). Because we are interested the effects of
 the aspen genome on insect communities, these `r common.n` SNPs with shared 
 significance will our SNPs of interest. These insects are expected to affected 
@@ -158,4 +159,4 @@ caption <- c(paste("Manhattan-style plots of 5 insects that share",
              ))
 ```
 
-For Supplemental Materials see: [sup. materials]("docs/final-project-supplemental-mats.html"). 
+For Supplemental Materials see: [sup. materials](final-project_supplemental-mats.html). 
