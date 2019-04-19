@@ -1,0 +1,161 @@
+---
+title: "Evaluating the Effects of Aspen Genetics on Insect Communities"
+author: "Clay Morrow and Ting-Fung Ma"
+date: "April 18, 2019"
+output:
+  html_document:
+    code_folding: hide
+    css: ../docs/html-format_css.txt
+  pdf_document: default
+bibliography: null
+params:
+  data: !r c("ggManhattan-objects","significant-SNP-list", "all_insects_combined")
+subtitle: '`r paste("Final Report - Draft",format(Sys.Date(),"%d-%b-%Y"))`'
+tags: null
+abstract: null
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      eval.after = 'fig.cap')
+
+knitr::opts_knit$set(root.dir = "../")
+```
+
+```{r load data}
+library(dplyr)
+# load data provided in knitr parameter
+data(list = params$data)
+tree.traits <- read.table("data/phenos-and-covars.txt",header = TRUE)
+
+# ins.env <- new.env()
+# load("~/Documents/projects/community-analysis-WisAsp/data/r-objects.RData",
+     # envir = ins.env)
+```
+
+## Methods
+```{r}
+SNP.N <- nrow(q.df) # 114420
+insect.n <- nrow(sig.n.table) # 18
+tree.n <- length(unique(tree.traits$SerialNo)) # 1569
+genet.n <- length(unique(tree.traits$Genet)) # 437
+av.rep <- round(sum(tree.traits %>% group_by(Genet) %>% tally() %>% 
+                      transmute(n/4))/genet.n) # 3
+```
+
+We conducted a genome-wide association (GWA) analysis between trembling aspen 
+(*Populus tremuloides*) and incidence (presence/absence) of `r insect.n` common
+insects (**table 1**). Incidence was measured on `r tree.n` trees twice per summer 
+(June and August) in 2016 and 2017 for a total of 4 surveys events. Among these 
+trees, there are `r genet.n` unique individuals (genets), each with an average
+of `r av.rep` clonal replicates. 
+
+The DNA reads of each tree were alligned to scaffold regoions of the reference 
+genome. Genomomic position relationships among and within chromosomes is 
+currently unknown for aspen. Therefore, locations of SNPs are only understood 
+within scaffolds. 
+For this reason, SNPs were not pruned upstream for LD. Genes and 
+annotations for *Populus trichocarpa* and "*Arabidopsis* can be imputed to 
+a list of SNPs to draw conclusions about phenotype.
+
+*Ting-Fung: This section is probably better suited for you: 
+
+* GLMM method information here ... followed by model. Maybe something like:
+
+$$logit(p_{i}) = \beta_0 +\alpha SNP + \beta_{m}T_{m} + \epsilon_{k,l} + e$$
+
+Where $i$ is the insect species, $T_m$ is aspen trait $m$ (Volume, PGsum, 
+CTsum, etc...) $\epsilon_{k,l}$ is the random effect for genet $k$ in survey
+event $l$.
+
+We then converted our p values into q values (Storey), controlling 
+for a false discovery rate of .05. Then, for discovery purposes, we use a .05 
+significance level cutoff for q values to identify significant associations.
+
+## Results
+
+### Significant Associations
+
+```{r}
+snps.n = length(running.sig.snps)
+scaff.n = length(running.sig.scaf)
+```
+
+From the `r SNP.N` total SNPs, we identified `r snps.n` unique SNPs with 
+significant associations ($q < .05$) to incidence of at least one of our 
+common insect species. Those SNPs were located on a total of `r scaff.n` 
+scaffolds. **table 1** shows the breakdown of significant associations by all 
+of our common insect species.
+
+```{r insect meta data, include = FALSE}
+insect.description <-  c(
+  "free-feeding, specialist (salicaceae)", #grn.aph
+  "leaf-galling, specialist (populus)", #pet.gal
+  "leaf-rolling, specialist (salicaceae)", #phyl
+  "leaf-galling, specialist (populus)", #harm
+  "free-feeding, specialist (populus)", #smk.aph 
+  "case-bearing, generalist", #CB
+  "leaf-mining, specialist (populus)",#lomb
+  "leaf-mining, specialist (salicaceae)",#CLM
+  "leaf-mining, specialist (salicaceae)",#LEM
+  "leaf-mining, specialist (populus)",#blot
+  "leaf-mining, specialist (salicacea)",#weevil
+  "leaf-mining, specialist (populus)",#black.beet
+  "free-feeding, generalist",#LH
+  "aphid-tending, non-herbivore",#Ants
+  "free-feeding, specialist (populus)",#PGN
+  "free-feeding, specialist (populus)",#ALB
+  "free-feeding, specialist (populus)",#GS
+  "scale insect, generalist"#CS
+  )
+# species <- metadata.insects %>% filter(R.Columns %in% common.insects) %>% 
+#   select(R.Columns,Binomial)
+# species$Binomial <- gsub(unlist(species$Binomial), pattern = "\\.",replacement = " ")                 
+# species$Binomial <- gsub(species$Binomial, pattern = "\\d",replacement = "")
+# species
+sig.n.table <- cbind("insect description" = insect.description, sig.n.table)
+rownames(sig.n.table) <- gsub(rownames(sig.n.table),pattern = "Blackmine",
+                              replacement = "Blackmine Beetle")
+```
+
+
+```{r table 1 snp.n, fig.cap = caption}
+caption = c("**table 1:** insect descriptions, number of significant SNP associations per insect, and number of scaffolds on which those SNPs are located.")
+knitr::kable(sig.n.table, caption = caption)
+```
+
+```{r sig n by insects}
+ins.n = sum(sig.n.table$SNPs > 0) # 8
+common.ins.n <- (unlist(snp.insects) %>% unique %>% length()) # 5
+common.n <- nrow(incommon.snps) # 84
+common.3.n <- nrow(incommon.snps %>% filter(n.assoc > 2)) # 4
+```
+
+Of the `r insect.n` common insects, `r ins.n` had significant associations.
+Among those significant associations, `r common.n` SNPs were significantly 
+associated with at least 2 insects (**figure 1**). Because we are interested the effects of
+the aspen genome on insect communities, these `r common.n` SNPs with shared 
+significance will our SNPs of interest. These insects are expected to affected 
+by similar mechanisms, due to their similar feeding strategies (**table 1**). 
+Therefore, it is more likely that those SNPs that affect multiple insects are 
+truly biologically significant. There is especially strong evidence for 
+`r common.3.n` SNPs which were associated with 3 insect species and are located
+in the same genomic region. This indicates that a true loci of interest lies
+wthin this genomic region. 
+
+```{r figure 1 multimanhattan, fig.cap = caption, out.width="150%", out.extra='angle=270'}
+knitr::include_graphics("../figures/gg-multiManhattanPlot.png")
+caption <- c(paste("Manhattan-style plots of 5 insects that share",
+             "significant SNPs. The x-axis shows a filtered genomic region;", 
+             "only scaffolds with shared-significant SNPs (red) are shown.",
+             "q value based LOD scores are shown on the y-axis with dashed",
+             "lines representing significance levels of .05 (dark blue) and",
+             ".01 (blue). When an insect has a red SNP above the .05",
+             "line, it shares this SNP association with another insect.",
+             "Note that adjacent scaffolds on the x-axis (alternating black",
+             "and grey) do not correspond to adjacent regions in the genome.",
+             "Exact locations of scaffolds in the genome are currently unkown."
+             ))
+```
+
+For Supplemental Materials see: [sup. materials]("docs/final-project-supplemental-mats.html"). 

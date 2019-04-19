@@ -1,0 +1,47 @@
+---
+title: "Supplemental Material"
+author: "Clay Morrow and Ting-Fung Ma"
+date: "April 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Supplemental Material
+
+```{r Table A snps of interest}
+collapsed.list <- lapply(snp.insects, function(x){
+  paste(x, collapse = ", ")
+})
+table <- data.frame(NULL)
+for(i in names(collapsed.list)){
+  SNP = i
+  insects = unlist(collapsed.list[[i]])
+  table[i,"SNP"] <- SNP
+  table[i,"Insect Associations"] <- insects
+}
+caption <- paste("SNPs of interest and the insects with which they have",
+                 "significant associations")
+knitr::kable(table, row.names = FALSE, caption = caption)
+```
+
+```{r Fig A full manhattan plots, message=FALSE, fig.cap = caption, out.extra='angle=270', out.width="100%"}
+image.paths <- c(list.files("figures/q-manhattan_ggplot/"))
+insects <- gsub(image.paths,pattern = "ggM.*plot_(.*)\\.png",replacement = "\\1")
+insects <- gsub(insects, pattern = "-", replacement = " ")
+insects <- gsub(insects, pattern = "Blackmine", replacement = "Blackmine Beetle")
+caption <- c(rep(NA,length(image.paths) - 1),"caption for reals")
+
+caption <- NULL
+for (i in 1:length(insects)) {
+  caption[insects[i]] <- paste0("Fig A.",i, ": Full Manhattan\n Plot of ",
+                                insects[i],". SNPs of interest are colored red")
+}
+par(mfrow = c(1,2))
+knitr::include_graphics(path = paste0("../figures/q-manhattan_ggplot/",
+                                      image.paths))
+```
+
