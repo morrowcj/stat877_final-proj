@@ -14,7 +14,8 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
                       eval.after = 'fig.cap')
 
 knitr::opts_knit$set(root.dir = "../")
-data("significant-SNP-list")
+library(dplyr)
+data("significant-SNP-list", "all_insects_combined")
 ```
 
 ```{r insect names, include=FALSE}
@@ -51,6 +52,13 @@ table
 
 `r caption`
 
+## p value table (SNPs of interest)
+
+```{r}
+all_insects_combined %>% filter(SNP.name %in% table$SNP)
+```
+
+
 ## p value distributions
 
 ```{r p histograms}
@@ -58,6 +66,12 @@ image.paths <- normalizePath(file.path("figures/p-hist/",
                                        list.files("figures/p-hist/",
                                                   pattern = ".png")))
 knitr::include_graphics(image.paths)
+```
+
+## q value table (SNPs of interest)
+
+```{r}
+q.df %>% filter(SNP.name %in% table$SNP)
 ```
 
 
