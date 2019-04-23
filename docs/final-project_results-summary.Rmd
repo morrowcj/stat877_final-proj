@@ -33,12 +33,13 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
 knitr::opts_knit$set(root.dir = "../")
 ```
 
-```{r load data}
+```{r load data, purl=FALSE}
 library(dplyr)
 # load data provided in knitr parameter
-data(list = params$data)
-tree.traits <- read.table("data/phenos-and-covars.txt",header = TRUE)
 
+vars.list <- data(list = params$data)
+tree.traits <- read.table("data/phenos-and-covars.txt",header = TRUE)
+starting.objects <- ls()
 # ins.env <- new.env()
 # load("~/Documents/projects/community-analysis-WisAsp/data/r-objects.RData",
      # envir = ins.env)
@@ -292,7 +293,7 @@ potential false positives.
 
 ## Statistical Analyses
 
-```{r}
+```{r, purl=TRUE}
 SNP.N <- nrow(q.df) # 114420
 insect.n <- nrow(sig.n.table) # 18
 tree.n <- length(unique(tree.traits$SerialNo)) # 1569
@@ -331,22 +332,23 @@ can be imputed to a list of aspen SNPs to draw conclusions about function.
 ### GLMM
 
 We consider a generalized linear mixed model (GLMM) for GWA. For each SNP, 
-denote $p_{ijk}$ as the probability of observing non-zero count of insect type
-$i$ on aspen genet $k$ during survey event $j$, the GLMM for the SNP has 
+denote $p_{ijk_{g}}$ as the probability of observing non-zero count of insect type
+$i$ on tree $k$, belonging to genotype $g$, during survey event $j$, the GLMM for a SNP has 
 form:
 
-$$\text{logit}(p_{ijk}) = \beta_0 +\alpha \text{SNP}_{ijk} + x_{ijk}^\intercal\beta + \varepsilon_{k(j)},$$
+$$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{jg} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
 
-where $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$, $\text{SNP}_{ijk}$ is 
-the number of alleles matched with the reference allele at the SNP location, 
-i.e. additive coding of genotype is adopted. 
-Moreover, $x_{ijk}$ is the vector of observed tree trait covariates, 
+where $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$,
+$\text{G}_{jg}$ is the SNP-specific genotype of genet $g$.
+Genotype is defined here as the number of alleles that match the reference 
+allele at the SNP location, i.e. additive coding of genotype is adopted. 
+Moreover, $x_{jk_{g}}$ is the vector of observed tree trait covariates, 
 which includes volume of the tree, average leaf area of the tree, standardized 
 leaf area of the tree, degree days at which the tree's leaves became fully 
 opened, average extra-floral nectaries per leaf of the tree, foliar condensed 
 tannin concentration, salicinoid phenolic glycosides concentration,and age of 
 tree. Since clonal replicates are nested under the four survey events, we consider 
-$\varepsilon_{k(j)}$ as a random effect to introduce dependence between 
+$\varepsilon_{g(j)}$ as a random effect to introduce dependence between 
 observations with same clonal replicate at the same survey period. To conduct
 GWA, the two-tailed t-test p value of $\alpha$ in the GLMM is used to identify 
 significant associations after fdr correction.
@@ -367,7 +369,7 @@ significance level cutoff for q values to identify significant associations.
 
 ## Significant Associations
 
-```{r}
+```{r, purl=TRUE}
 snps.n = length(running.sig.snps)
 scaff.n = length(running.sig.scaf)
 ```
@@ -378,7 +380,7 @@ common insect species. Those SNPs were located on a total of `r scaff.n`
 scaffolds. Table \ref{tab:sigtab} shows the breakdown of significant associations by all 
 of our common insect species.
 
-```{r insect meta data, include = FALSE}
+```{r insect meta data, include = FALSE, purl=TRUE}
 insect.description <-  c(
   "free-feeding, specialist (salicaceae)", #grn.aph
   "leaf-galling, specialist (populus)", #pet.gal
@@ -410,12 +412,12 @@ rownames(sig.n.table) <- gsub(rownames(sig.n.table),pattern = "Blackmine",
 ```
 
 
-```{r table 1 snp.n, fig.cap = caption}
+```{r table 1 snp.n, fig.cap = caption, purl=FALSE}
 caption = c("\\label{tab:sigtab}Insect descriptions, number of significant SNP associations per insect, and number of scaffolds on which those SNPs are located.")
 knitr::kable(sig.n.table, caption = caption)
 ```
 
-```{r sig n by insects}
+```{r sig n by insects, purl=TRUE}
 ins.n = sum(sig.n.table$SNPs > 0) # 8
 common.ins.n <- (unlist(snp.insects) %>% unique %>% length()) # 5
 common.n <- nrow(incommon.snps) # 84
@@ -434,7 +436,7 @@ truly biologically significant. There is especially strong evidence for
 in the same genomic region (table \ref{tab:snptab}). This indicates that a true loci of interest lies
 wthin this genomic region. 
 
-```{r figure 1 multimanhattan, fig.cap = caption, out.width="120%", out.extra='angle=270'}
+```{r figure 1 multimanhattan, fig.cap = caption, out.width="120%", out.extra='angle=270', purl=FALSE}
 knitr::include_graphics("../figures/gg-multiManhattanPlot.png")
 caption <- c(paste("\\label{fig:multiman}Manhattan-style plots of 5 insects that share",
              "significant SNPs. The x-axis shows a filtered genomic region;", 
@@ -451,7 +453,7 @@ caption <- c(paste("\\label{fig:multiman}Manhattan-style plots of 5 insects that
 
 For Supplemental Materials see: [sup. materials](final-project_supplemental-mats.html). 
 
-```{r snp table}
+```{r snp table, purl=TRUE}
 int.snps <- incommon.snps %>% filter(n.assoc > 2) %>% select(SNP.name)
 
 tab <- q.df %>% filter(SNP.name %in% int.snps$SNP.name) %>%
@@ -498,5 +500,11 @@ insect communities among aspen genets using measured traits and environmental
 factors. The genotype associations will give us a better understanding of
 the genet-driven variation of insect communities that remains unexplained by 
 these measured traits.
+
+```{r save objects for presentation}
+new.objects <- ls()[!ls() %in% starting.objects]
+save(list = c(new.objects,"sig.n.table","incommon.snps"), file = "data/presentation-objects.RData")
+```
+
 
 # References

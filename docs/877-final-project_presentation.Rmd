@@ -1,0 +1,179 @@
+---
+title: "Evaluating the Effects of Trembling Aspen Genetics on Insect Communities"
+author: "Clay Morrow and Ting-Fung Ma"
+subtitle: "Stat 877 project presentation"
+date: "May 2, 2019"
+fontsize: 10pt
+header-includes:
+  - \setbeamersize{text margin left=5mm,text margin right=5mm} 
+output: 
+  beamer_presentation:
+    theme: "Berlin"
+    colortheme: "dolphin"
+    fonttheme: "professionalfonts"
+    slide_level: 1
+---
+
+```{r pres setup, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = "../")
+# load objects created in the final report
+```
+```{r}
+data("presentation-objects")
+```
+
+
+# Background
+
+## Plant-insect interactions: 
+
+* Plants are known to influence insect community structure
+
+* Plant Diversity is positively correlated with insect diversity.
+
+    * effects of interspecific variation are well studied
+    
+    * effects of **intraspecific variation** are less well studied 
+    
+## *Populus tremuloides* (Trembling Aspen):
+ 
+* the most wide-spread tree species in North America
+
+* one of the fastest-growing tree species 
+
+* incredible amounts of intraspecific variation
+
+* food source for an incredible diversity of herbivores    
+
+<!-- # Conceptual Model -->
+
+```{r}
+# Picture Here
+```
+
+# Genome-wide association analysis (GWA)
+
+## Question: How do aspen genetics shape insect communities? 
+
+* Herbivorous insects are known to differ by aspen clone (genet) and by aspen 
+traits (size, defense chemistry, nutrition, etc.).
+
+* Is there evidence for genetic drivers other than these physical traits?
+
+* **Are there genomic regions that affect multiple insects?**
+
+## GWA of insect incidence on aspen common garden:
+
+* `r insect.n` common insect species; present/absent (1/0)
+
+* `r prettyNum(tree.n, big.mark = ",")` trees from `r genet.n` genets
+
+* 8 tree trait covariates
+
+* 4 time periods (longitudinal)
+
+* `r prettyNum(SNP.N, big.mark = ",")` SNP regions with 3 possible genotypes 
+{0,1,2} <!-- # of alleles that match the reference allele -->
+
+# Statistical Model
+
+## $$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{jg} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
+
+Where:
+
+* $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$
+
+* $p_{ijk_{g}}$: probability of observing $>0$ individual insects of species $i$
+during survey event $j$ on tree $k$ of genet $g$
+
+* $\text{G}_{jg}$: SNP-specific genotype of genet $g$
+
+* $x_{jk_{g}}$: vector of observed tree trait covariates for tree $k$ during
+survey event $j$
+
+* $\varepsilon_{g(j)}$: nested random effect of genet within survey event
+
+* Storey's q values of coefficient $\alpha$ used to select significant SNPs
+
+A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were built.
+
+# Diagnostics: p value distributions
+
+```{r,out.width="30%",out.height="45%"}
+insects <- c("Harmandia", "Petiole-Gall",
+             "Phyllocolpa","Blotch-Mine",
+             "Ants","Green-Sawfly")
+paths <- normalizePath(file.path("figures/p-hist",paste0("p-histogram-of_",insects,".png")))
+knitr::include_graphics(path = paths)
+```
+
+# Diagnostics: Bonferroni vs. Storey's q 
+
+```{r, out.width = "50%", fig.align="center"}
+p.man <- normalizePath(file.path("figures/p-manhattan/Manhattan-plot_Petiole-Gall.png"))
+q.man <- normalizePath(file.path("figures/q-manhattan/Manhattan-plot_Petiole-Gall.png"))
+library(png);library(grid);library(gridExtra)
+img.1 <- rasterGrob(as.raster(readPNG(p.man)))
+img.2 <- rasterGrob(as.raster(readPNG(q.man)))
+grid.arrange(img.1,img.2,ncol = 1)
+```
+
+\scriptsize
+
+* Using q values (bottom) allows for discovery of many more potential associations than bonferroni p values (top).
+
+* significant q values contain all significant bonferroni p values
+
+# Results: Significant SNPs per Insect
+\scriptsize
+```{r}
+knitr::kable(sig.n.table)
+```
+
+\normalsize There are `r snps.n` unique significant SNPs. 
+
+# Results: Common Associations
+
+* Of these `r snps.n` unique SNPs, There **`r common.n`** SNPs with multiple insect associations. 
+
+* `r nrow(tab)` of these had associations with 3 insects:
+
+\scriptsize
+```{r}
+knitr::kable(tab)
+bp.range <- range(bp)[2] - range(bp)[1]
+```
+
+\normalsize 
+
+* They are within `r bp.range` base pairs (likely in LD)
+which suggest there may be one important gene region.
+
+* Note that these are the **2 galling insects** and one **leaf-rolling** (all stationary feeders, tightly associated with the leaves)
+
+# Results: Multiple-Manhattan Plot
+
+```{r multiman,fig.align='center', out.width="100%"}
+path <- normalizePath(file.path("figures/gg-multiManhattanPlot.png"))
+knitr::include_graphics(path)
+```
+
+# Discussion
+
+## Conclusions
+
+* Evidence of genomic regions that influence individual insects and communities
+
+* These genomic regions are independent of the observed tree traits
+
+## Future Directions 
+
+* Impute gene annotations from congeneric *Populus trichocarpa* and model *Arabidopsis* to test for biological function/validation
+
+* Compare with more traditional methods (using BLUPs for example)
+
+    * A similar study on this garden found only 2 insect associations with < 12 total significant SNPs using BLUPs and a more lenient inclusion cutoff ($q < 0.1$) in 2015
+    
+* Include more tree traits and environmental variables
