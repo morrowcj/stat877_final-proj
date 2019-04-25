@@ -1,0 +1,138 @@
+---
+title: "Annotate Significant SNPs"
+author: "Jennifer Riehl"
+date: "4/24/2019"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+---
+
+```{r setup}
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = "../")
+```
+
+
+## Introduction
+
+This document is meant to help guide you through annotating your significant SNPs with information from P. tremula (reference genome) and connect that information to P. trichocarpa and A. thaliana genes.
+
+This process starts with two input files:
+1. List of significant SNPs
+2. List of annotated P. tremula (Potra) genes (see notes below)
+
+The annotated list of Potra genes is specific to our SNP dataset, so Jenn Riehl will update this file when we finalize our SNP filtering.
+
+Additionally, the annotations came from PopGenie (ftp://plantgenie.org/Data/PopGenIE/Populus_tremula/v1.1/annotation), and will likely have been updated since it was first done last year. This information will also be updated with the new SNP dataset.
+
+```{r data setup}
+#Bring in input files
+  ## List of significant SNPs (make sure you have a column with just the scaffold identifier and label the column "Chrom"; PLINK will automatically have this column)
+Insect_GWA <- read.csv("Annotating-Significant-SNPs/InsectCommunityGWA_SNPs_042419.csv")
+Insect_GWA <- within(Insect_GWA,{
+  Scaffold <- Chrom
+  base.pair <- as.numeric(gsub(ID, pattern = "Potra\\d*:",replacement = ""))
+})
+# head(Insect_GWA)
+#List of annotated Potra genes (file compiled by Jenn Riehl)
+annotated_genes <- read.csv("Annotating-Significant-SNPs/Potra_Genes_with_SNPs_Annotated_GO_042419.csv")
+
+
+#Needed libraries
+library(dplyr)
+
+```
+
+## Annotation
+
+This section is where you will align your SNP list to the annotated genes list. 
+
+We use a simple merge function to align our complete set of annotated genes and our SNP list by the "Chrom" column (which is really our scaffold designation).
+
+There will be duplicated gene IDs after this merge when more than one SNP is located in a single Potra gene. In order to par our list down to only unique Potra gene IDs, we need to get rid of duplicate Potra gene IDs. We use the base-R "subset" and dplyr "duplicates" functions to do this. 
+
+Finally you may want to output your results so you can manually manipulate them outside of R.
+
+```{r Annotate significant SNPs, }
+# Annotate
+Insect_GWA_annotated <- merge(Insect_GWA, annotated_genes, by = "Chrom")
+
+#Include only genes that are covered by SNPs
+filtered.annotations <- Insect_GWA_annotated %>% 
+  filter((base.pair >= START & base.pair <= END)) %>% 
+  select(-Chrom)
+
+dim(filtered.annotations)
+
+
+#Output a file with the results of your significant SNP annotation for manual manipulation
+write.csv(filtered.annotations, "data/commonSNP-GWA-results.csv",
+          row.names = FALSE)
+```
+
+## What do my results mean?
+
+So you now have annotated your significant SNPs and you find that the functional desscriptions are vague and opaque sounding. What can you do to learn whether your significant SNP is in a gene that makes biological sense for what trait you are looking at?
+
+There are three different approaches you can take:
+
+#### Use an internet search engine
+Do a Google and/or Google Scholar search with the functional description of the gene and see what research may have been done on your gene Comparing annotated genes to our candidate gene list
+
+#### Use Phytozome or GenBank
+There are databases for both P. trichocarpa and A. thaliana that you can search with a gene name to find out more information, such as more detailed functional descriptions and associated publications. 
+
+Phytozome (https://phytozome.jgi.doe.gov/pz/portal.html) is the Department of Energy's Joint Genome Institute's Plant Comparative Genomics portal and host 93 assembled and annotated genomes, including P. trichocarpa. JGI provides a quick start page that details how to use their site: https://phytozome.jgi.doe.gov/pz/QuickStart.html
+
+
+To use this resource, you simply choose which genome you want to search from, in our case it would be Populus trichocarpa v3.0, and copy the name of the Potri gene into the second search box (Note: the gene must have a period after the species designation (not a pipe) for the search to work: 	Potri.006G040600.1)
+
+GenBank (https://www.ncbi.nlm.nih.gov/genbank/) is the NIH genetic sequence database, an annotated collection of all publicly available DNA sequences (Nucleic Acids Research, 2013 Jan;41(D1):D36-42). GenBank is part of the International Nucleotide Sequence Database Collaboration, which comprises the DNA DataBank of Japan (DDBJ), the European Nucleotide Archive (ENA), and GenBank at NCBI. These three organizations exchange data on a daily basis.
+
+To use this resource simply copy or type in the gene name in the search box at the top of the page (for example: AT3G57000). NOTE: the Potri.xxx designation is only searchable in Phytozome, so this option is good when you have a GenBank accession number, which always start with a two letter abbreviation for the species/cultivar and a series of numbers for the gene.
+
+#### Candidate gene list
+Jenn Riehl has also been compiling a candidate gene list from literature searches. This section allows us to take our candidate gene list and compare it to our annotated SNP list. 
+
+You will need at least two input files:
+1. Your annotated SNP list created above
+2. Candidate gene lists (see notes below)
+
+There are two versions of the files you can look at, candidate genes that we have represented in our SNP dataset and candidate genes that we do not have represented in our SNP dataset. These two files are available so we can see if other studies have found significant SNPs in genes we just don't have covered in our dataset.
+
+This list of candidate genes is continually being updated, so check with Jenn Riehl for the most up to date version of this file.
+
+```{r Compare annotated genes to candidate gene list, echo=FALSE}
+#Set working directory (change location as needed)
+
+Insect_GWA_annotated <- filtered.annotations
+CanGen_Ann_SNP <-read.csv("Annotating-Significant-SNPs/CanGen_SNP_Overlap_020918.csv")
+CanGen_Ann_noSNP <-read.csv("Annotating-Significant-SNPs/CanGen_noSNP_Overlap_020918.csv")
+
+
+#Merge Can_SNP_overlap and Can_noSNP_Overlap files with annotated GWA results file
+Insect_CanGen_Ann_SNP <- merge(Insect_GWA_annotated, CanGen_Ann_SNP, by = "Potra_Gene_ID")
+Insect_CanGen_Ann_noSNP <- merge (Insect_GWA_annotated, CanGen_Ann_noSNP, by = "Potra_Gene_ID")
+
+#Output a file with the results of your significant SNP annotation for manual manipulation
+write.csv(Insect_CanGen_Ann_SNP, "C:/Users/jfriehl/Documents/RSpace/Output/Insect_GWA_annotated_CanGen.csv")
+```
+
+#### KNETMINER
+
+You can also use KNETMINER (http://knetminer.rothamsted.ac.uk/) to do a Google-like search of what is known about the gene identified. The downside is that they only have a tool for Arabidopsis, so we will need to us the AT gene IDs.Hilary used P. trichocarpa IDs, but it does not seem that their site supoorts this species. More information on how to use this resource to come. 
+
+#### Gene Ontology (GO) Enrichment
+
+Finally, if you have a long list of significant SNPs (>100), you may want to consider doing a Gene Ontology (GO) enrichment analysis to see what GO categories your data is enriched for. Our Potra annotated genes were also GO annotated, so that information is already in the file created under the Annotation Section and can be explored further in R or Excel.
+
+Other options exist that are continually being updated. There are many programs out there to do this kind of analysis.
+
+Panther is the one run  by the GO Consortium (http://geneontology.org/docs/go-enrichment-analysis/),and it has Populus trichocarpa listed,but we need the gene IDs to be in a different format since Panther doesn't recognize the Phytozome IDs. We can use BioMart to do this (http://bioinformatics.cvr.ac.uk/blog/why-and-how-to-use-biomart/), however, Jenn Riehl has not tried this yet.
+
+Another option is LAGO (https://go.princeton.edu/cgi-bin/LAGO), which was also used by McKown et al. (2014) and in Hilary's work. We can in theory use our own Potra annotation list, but once again, the format (.gaf: http://geneontology.org/docs/go-annotation-file-gaf-format-2.0/) for this file needs to be figured out before this option can be used. Talk to Jenn Riehl if you want to use this option.
+
+ 

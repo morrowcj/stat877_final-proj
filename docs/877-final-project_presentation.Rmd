@@ -21,7 +21,8 @@ knitr::opts_knit$set(root.dir = "../")
 # load objects created in the final report
 ```
 ```{r}
-data("presentation-objects")
+data(list = c("presentation-objects",
+              "GWA-annotated-candidate-table"))
 ```
 
 
@@ -77,9 +78,10 @@ traits (size, defense chemistry, nutrition, etc.).
 * `r prettyNum(SNP.N, big.mark = ",")` SNP regions with 3 possible genotypes 
 {0,1,2} <!-- # of alleles that match the reference allele -->
 
+
 # Statistical Model
 
-## $$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{jg} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
+## $$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{g} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
 
 Where:
 
@@ -88,16 +90,16 @@ Where:
 * $p_{ijk_{g}}$: probability of observing $>0$ individual insects of species $i$
 during survey event $j$ on tree $k$ of genet $g$
 
-* $\text{G}_{jg}$: SNP-specific genotype of genet $g$
+* $\text{G}_{g}$: SNP-specific genotype of genet $g$
 
 * $x_{jk_{g}}$: vector of observed tree trait covariates for tree $k$ during
 survey event $j$
 
 * $\varepsilon_{g(j)}$: nested random effect of genet within survey event
 
-* Storey's q values of coefficient $\alpha$ used to select significant SNPs
+* Storey's q values of coefficient $\alpha$ used to select significant SNPs (.05 cutoff)
 
-A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were built.
+A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fit.
 
 # Diagnostics: p value distributions
 
@@ -132,26 +134,35 @@ grid.arrange(img.1,img.2,ncol = 1)
 knitr::kable(sig.n.table)
 ```
 
-\normalsize There are `r snps.n` unique significant SNPs. 
+\normalsize There are `r prettyNum(snps.n, big.mark = ",")` unique significant SNPs. 
 
 # Results: Common Associations
 
-* Of these `r snps.n` unique SNPs, There **`r common.n`** SNPs with multiple insect associations. 
+* Of these `r prettyNum(snps.n, big.mark = ",")` unique SNPs, There are **`r common.n`** SNPs with multiple insect associations. These will be our SNPs of interest.
 
-* `r nrow(tab)` of these had associations with 3 insects:
+* `r nrow(tab)` of these had associations with 3 insects and were contained in 1 gene:
 
 \scriptsize
 ```{r}
+library(dplyr)
 knitr::kable(tab)
 bp.range <- range(bp)[2] - range(bp)[1]
 ```
 
 \normalsize 
 
-* They are within `r bp.range` base pairs (likely in LD)
-which suggest there may be one important gene region.
+* They are within `r bp.range` base pairs (LD/same gene)
 
-* Note that these are the **2 galling insects** and one **leaf-rolling** (all stationary feeders, tightly associated with the leaves)
+Note that these are the 2 **leaf-galling** and 1 **leaf-rolling** species. They are tightly associated with leaves. However, the gene annotation is not very insightful:
+
+\scriptsize
+```{r}
+small.tab <- candidate.table %>% filter(n.assoc >2) %>% select(-n.assoc)
+small.tab.names <- c("Potri Gene","%match","Descr.","avg allele. freq")
+knitr::kable(small.tab,col.names = small.tab.names)
+```
+
+\normalsize
 
 # Results: Multiple-Manhattan Plot
 
@@ -159,6 +170,22 @@ which suggest there may be one important gene region.
 path <- normalizePath(file.path("figures/gg-multiManhattanPlot.png"))
 knitr::include_graphics(path)
 ```
+
+# Results: Imputed Gene Function
+
+The following is a few of our top (by % gene match) genes with annotations, imputed from congeneric *Populus trichocarpa*.
+
+\tiny
+```{r}
+table <- candidate.table %>% select(-n.assoc) %>% head(n = 22)
+knitr::kable(table, col.names = small.tab.names)
+
+average.freq <- mean(candidate.table$mean_alleleFreq)
+```
+
+\normalsize
+
+These annotations are vague and will require more research to determine which make biological sense.
 
 # Discussion
 
@@ -170,10 +197,179 @@ knitr::include_graphics(path)
 
 ## Future Directions 
 
-* Impute gene annotations from congeneric *Populus trichocarpa* and model *Arabidopsis* to test for biological function/validation
+* More thoroughly research gene annotations from congeneric *Populus trichocarpa* and model *Arabidopsis thaliana* to check biological function where possible
 
-* Compare with more traditional methods (using BLUPs for example)
+* Compare with other methods (multi-SNP, BLUP association, GBlups, etc)
 
-    * A similar study on this garden found only 2 insect associations with < 12 total significant SNPs using BLUPs and a more lenient inclusion cutoff ($q < 0.1$) in 2015
+    * A similar study on this garden found only 2 insect associations with < 12 total significant SNPs using BLUP association and a more lenient inclusion cutoff ($q < 0.1$) in 2015
     
-* Include more tree traits and environmental variables
+* Include more tree traits and environmental variables and interactions
+
+
+<!-- for lab group -->
+<!-- Potential Problems -->
+
+# Extra Slides
+
+
+
+-----
+
+\tiny Extra Slides: Potential Issues (Simulated Data)
+
+```{r, out.width="100%", out.height="95%"}
+n0 = n1 = round(genet.n/3)
+n2 = genet.n - (n0 + n1)
+n0.2 = round(.051*genet.n)
+n1.2 = round(.3*genet.n); n2.2 = genet.n-(n0.2+n1.2)
+set.seed(237)
+
+toy.data <- data.frame(
+  alleles.A = c(rep(0,n0),
+                rep(1,n1),
+                rep(2,n2)),
+  Genotype = factor(c(rep("homo.B",n0),
+                      rep("hetero",n1),
+                      rep("homo.A",n2))),
+  SNP.1  = c(rbinom(prob = .6,n = n0, size = n0)/n0,
+             rbinom(prob = .5,n = n1, size = n1)/n1,
+             rbinom(prob = .4,n = n2, size = n2)/n2))
+  
+toy.data2 <- data.frame(
+  alleles.A = c(rep(0,n0.2),
+                rep(1,n1.2),
+                rep(2,n2.2)),
+  Genotype = factor(c(rep("homo.B",n0.2),
+                      rep("hetero",n1.2),
+                      rep("homo.A",n2.2))),
+  SNP.2  = c(
+             rnorm(n = n0.2,sd = .05,mean = .7),
+             # rbinom(prob = .5,n = n0.2, size = n0.2)/n0.2,
+             rbinom(prob = .6,n = n1.2, size = n1.2)/n1.2,
+             rbinom(prob = .7,n = n2.2, size = n2.2)/n2.2)
+)
+
+toy.data3 <- data.frame(
+  alleles.A = c(rep(0,n0),
+                rep(1,n1),
+                rep(2,n2)),
+  Genotype = factor(c(rep("homo.B",n0),
+                      rep("hetero",n1),
+                      rep("homo.A",n2))),
+  SNP.3  = c(
+             rbinom(prob = .7,n = n0, size = n0)/n0,
+             rbinom(prob = .6,n = n1, size = n1)/n1,
+             rbinom(prob = .7,n = n2, size = n2)/n2)
+)
+
+library(ggplot2)
+g1 <- ggplot(data = toy.data, aes(x = alleles.A, 
+                            y = SNP.1, col = Genotype)) +
+  labs(x = "Alleles equal to reference allele",
+         y = "Probability of Insect Presence",
+       title = "Association with SNP 1 \nHypothesized Situation",
+       subtitle = "Equal distribution of alleles") + 
+  geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black") 
+
+g2 <- ggplot(data = toy.data2, aes(x = alleles.A, 
+                            y = SNP.2, col = Genotype)) +
+  labs(x = "Alleles equal to reference allele",
+         y = "Probability of Insect Presence",
+       title = "Association with SNP 2: \nHeterozygote Advantage",
+       subtitle = "Uneven distribution of alleles") + 
+  geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black")
+
+g3 <- ggplot(data = toy.data3, aes(x = alleles.A, 
+                            y = SNP.3, col = Genotype)) +
+  labs(x = "Alleles equal to reference allele",
+         y = "Probability of Insect Presence",
+       title = "Association with SNP 3: \nHeterozygote Advantage",
+       subtitle = "Equal distribution of alleles") + 
+  geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black")
+
+grid.arrange(g1,
+             g3,g2,nrow = 1)
+```
+
+<!-- #### -->
+<!-- end for lab group -->
+
+----
+
+## BLUPs: Linear Mixed Model (LMM) Definition
+
+Consider the following model for some response $Y$ on observation $j$:
+
+$$Y_j = \mu + X_j\beta + Z_j\tau + \varepsilon $$
+
+* $E(Y_j = X_j\beta)$
+
+* $X_{j}$ and $Z_j$ are vectors of independent variables for the $j$th observation 
+
+* $\beta$ is an unknown vector of regression parameters (fixed effects)
+
+* $\tau$ is an unknown vector of **random effects** 
+
+    * $E(\tau)=0$ and $Var(\tau)=G$; $G=Cov(\tau_m,\tau_k)$ for all $m$ and $k$
+
+* $\varepsilon$ is an unknown vector of random errors
+
+    * $E(\varepsilon)=0$ and $Var(\varepsilon)=R$
+
+----
+
+## LMM: Parameter Estimation
+
+$$Y_j = \mu + X_j\beta + Z_j\tau + \varepsilon$$
+
+ * $\tau \sim N(0,G)$, $\varepsilon \sim N(0,R)$, and $Cov(\tau,\varepsilon)=0$
+
+ * Find coefficients $\hat{\beta}$ and $\hat{\tau}$ such that they:
+
+    * minimize variance prediction error $Var(Y_{j} - \hat{Y_{j}})$
+
+    * are constrained by $E(Y_{j} - \hat{Y_{j}})=0$
+    
+          ($Bias(\hat{\theta})=E(\hat{\theta}) - \theta$)
+
+ * $\hat{\beta}$ is a vector of best linear unbiased estimators (BLUEs) of fixed effects
+
+ * $\hat{\tau}$ is a vector of best linear unbiased predictors (BLUPs) of fixed effects
+
+ * conditional variances (covariance matrices for $\beta$ and $\varepsilon$) are often unknown and are
+estimated as a nuisance parameter with Bayesian EM algorithm (`nlme`,`lme4`, etc.)
+
+## Take-Home Message
+
+BLUPs are constrained coefficienct estimates of random effects.
+
+----
+
+## Modern GWA Models
+
+* First fit LMM for a trait of interest (Size) with $\beta_i$ fixed effects and $\tau_g$ random effects:
+
+$$\text{Size} = \mu +  \beta_1(\text{PGs}) + \beta_2(\text{CTs})+ \dots + \beta_n(\text{Trait}_n) + \tau_{g}(\text{Genet}_{g}) + \varepsilon$$
+ 
+* Then conduct a linear association analysis between the size-specific BLUPs $\tau$ and the Genotype of at SNP $s$ of each genet $g$:
+
+$$\tau_g = \mu +\alpha(\text{Genotype}_{s,g}) + \varepsilon$$
+
+```{r, out.width="80%",fig.asp=.33,fig.align="center"}
+dat = data.frame(
+  y = c(rnorm(n = 100, mean = 1.5,sd = .5),
+        rnorm(n = 100, mean = 0, sd = .5),
+        rnorm(n = 100, mean = -1.5, sd = .5)),
+  x = rep(0:2, each = 100),
+  Genotype = factor(rep(c("homo.B","hetero","homo.A"),each = 100))
+)
+
+ggplot(data = dat, aes(x = x, y = y, col = Genotype)) + 
+  geom_point() + 
+  geom_smooth(method = "lm",aes(col = NULL), col = "black") +
+  labs(y = expression(tau), x = "Alleles matching reference allele") +
+  theme(axis.title = element_text(face = "bold"),
+        axis.title.y = element_text(size = 20))
+  
+```
+

@@ -336,10 +336,10 @@ denote $p_{ijk_{g}}$ as the probability of observing non-zero count of insect ty
 $i$ on tree $k$, belonging to genotype $g$, during survey event $j$, the GLMM for a SNP has 
 form:
 
-$$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{jg} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
+$$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{g} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
 
 where $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$,
-$\text{G}_{jg}$ is the SNP-specific genotype of genet $g$.
+$\text{G}_{g}$ is the SNP-specific genotype of genet $g$.
 Genotype is defined here as the number of alleles that match the reference 
 allele at the SNP location, i.e. additive coding of genotype is adopted. 
 Moreover, $x_{jk_{g}}$ is the vector of observed tree trait covariates, 

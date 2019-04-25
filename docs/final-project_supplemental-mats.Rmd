@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
 
 knitr::opts_knit$set(root.dir = "../")
 library(dplyr)
+```
+```{r}
 data("significant-SNP-list", "all_insects_combined")
 ```
 
@@ -30,24 +32,57 @@ insects <- gsub(insects, pattern = "Blackmine", replacement = "Blackmine Beetle"
 This document contains supplemental materials for 
 [this project](final-project_results-summary.Rmd).
 
-## Table of SNPs of interest:
+## Table of Genes of interest:
 
 ```{r Table A snps of interest, fig.cap=caption}
+# Collapse the insect vector to length 1
 collapsed.list <- lapply(snp.insects, function(x){
   paste(x, collapse = ", ")
 })
-table <- data.frame(NULL)
+# Create a candidate list:
+candidate.list <- data.frame(NULL)
 for(i in names(collapsed.list)){
   SNP = i
   insects = unlist(collapsed.list[[i]])
-  table[i,"SNP"] <- SNP
-  table[i,"Insect Associations"] <- insects
+  candidate.list[i,"SNP"] <- SNP
+  candidate.list[i,"Insect.Associations"] <- insects
+  candidate.list[i,"n.assoc"] <- length(snp.insects[[i]])
 }
+# create some new columns and rearrange:
+candidate.list <- candidate.list %>% 
+  mutate(scaffold = gsub(SNP,pattern = ":\\d*$",replacement = ""),
+         base.pair = as.numeric(gsub(SNP,pattern = "Potra\\d*:",replacement = ""))) %>% 
+  select(SNP, scaffold, base.pair, n.assoc, Insect.Associations)
+
+# read in annotation file
+annotations <- read.csv(file.path("Annotating-Significant-SNPs",
+                                  "Potra_Genes_with_SNPs_Annotated_GO_042419.csv"),
+                        header = TRUE)
+annotated.candidates <- merge(candidate.list, annotations, 
+                              by.x = "scaffold", by.y = "Chrom") %>% 
+  filter((base.pair >= START & base.pair <= END))
+
+
+candidate.table <- annotated.candidates %>% select(
+                                # SNP, 
+                                Potri_Gene_ID, 
+                                Percent_ID, 
+                                Functional_Description,
+                                n.assoc, 
+                                mean_alleleFreq, 
+                                ) %>% 
+  filter(!duplicated(Potri_Gene_ID)) %>% 
+  arrange(desc(Percent_ID))
+
+small.table <- candidate.table %>% filter(n.assoc > 2)
+
+
 caption <- paste("SNPs of interest and the insects with which they have",
                  "significant associations")
-# knitr::kable(table, row.names = FALSE, caption = caption)
-rownames(table) <- NULL
-table
+candidate.table
+
+save(list = c("candidate.table"),
+     file = "data/GWA-annotated-candidate-table.RData")
 ```
 
 `r caption`
@@ -55,6 +90,8 @@ table
 ## p value table (SNPs of interest)
 
 ```{r}
+table <- candidate.list
+
 all_insects_combined %>% filter(SNP.name %in% table$SNP)
 ```
 
