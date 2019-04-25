@@ -97,9 +97,16 @@ survey event $j$
 
 * $\varepsilon_{g(j)}$: nested random effect of genet within survey event
 
+
+# Computation and Limitations
+
+* lme4::glmer() is used to fit the GLMM with the nested random effect
+
+* High Throughput Computing (CHTC) for parallelization
+
 * Storey's q values of coefficient $\alpha$ used to select significant SNPs (.05 cutoff)
 
-A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fit.
+* A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fitted.
 
 # Diagnostics: p value distributions
 
@@ -134,7 +141,7 @@ grid.arrange(img.1,img.2,ncol = 1)
 knitr::kable(sig.n.table)
 ```
 
-\normalsize There are `r prettyNum(snps.n, big.mark = ",")` unique significant SNPs. 
+\normalsize There are `r prettyNum(snps.n, big.mark = ",")` unique significant SNPs using Storey's q. 
 
 # Results: Common Associations
 
@@ -183,7 +190,7 @@ knitr::kable(table, col.names = small.tab.names)
 average.freq <- mean(candidate.table$mean_alleleFreq)
 ```
 
-\normalsize
+\scriptsize
 
 These annotations are vague and will require more research to determine which make biological sense.
 
