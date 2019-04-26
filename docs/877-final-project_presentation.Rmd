@@ -23,6 +23,7 @@ knitr::opts_knit$set(root.dir = "../")
 ```{r}
 data(list = c("presentation-objects",
               "GWA-annotated-candidate-table"))
+library(jpeg);library(png);library(grid);library(gridExtra)
 ```
 
 
@@ -54,7 +55,15 @@ data(list = c("presentation-objects",
 # Picture Here
 ```
 
-# Genome-wide association analysis (GWA)
+
+# Common Garden
+
+```{r,out.width="100%",fig.align="center"}
+overhead.image <- rasterGrob(readJPEG("study-photos/WisAsp_Overhead1.JPG"))
+grid.arrange(overhead.image)
+```
+
+# Research Goals
 
 ## Question: How do aspen genetics shape insect communities? 
 
@@ -64,6 +73,16 @@ traits (size, defense chemistry, nutrition, etc.).
 * Is there evidence for genetic drivers other than these physical traits?
 
 * **Are there genomic regions that affect multiple insects?**
+
+```{r,out.width="50%", fig.align="center"}
+library(png);library(jpeg);library(grid);library(gridExtra)
+image.1 <- rasterGrob(readPNG("study-photos/conceptual-model2.png"))
+image.2 <- rasterGrob(readPNG("study-photos/genes-to-insects-conceptual-model.png"))
+grid.arrange(image.1,nrow = 1)
+```
+
+
+# Genome-wide association analysis
 
 ## GWA of insect incidence on aspen common garden:
 
@@ -77,17 +96,23 @@ traits (size, defense chemistry, nutrition, etc.).
 
 * `r prettyNum(SNP.N, big.mark = ",")` SNP regions
 
+```{r, out.width="50%",fig.align="center"}
+grid.arrange(image.2)
+```
+
+
 <!-- with 3 possible genotypes {0,1,2} -->
 <!-- # of alleles that match the reference allele -->
 
 
-# Statistical Model
+# Statistical Methods
 
-## Univariate SNP association model:
+## Model: Univariate SNP associations
 
 $$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{g} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
 
-<!-- * $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$ -->
+* $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$
+
 * SNPs considered independently
 
 * $p_{ijk_{g}}$: probability of observing $>0$ individual insects of species $i$
@@ -100,10 +125,6 @@ survey event $j$
 
 * $\varepsilon_{g(j)}$: nested random effect of genet within survey event
 
-* Storey's q values of coefficient $\alpha$ used to select significant SNPs (.05 cutoff)
-
-A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fit.
-
 <!-- # Diagnostics: p value distributions -->
 
 <!-- ```{r,out.width="30%",out.height="45%"} -->
@@ -114,12 +135,24 @@ A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were f
 <!-- knitr::include_graphics(path = paths) -->
 <!-- ``` -->
 
+# Statistical Methods
+
+## Computation:
+
+* lme4::glmer() is used to fit the GLMM with the nested random effect
+
+* High Throughput Computing (CHTC) for parallelization
+
+* A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fit.
+
+* Storey's q values of coefficient $\alpha$ used to select significant SNPs (.05 cutoff)
+
 # Diagnostics: Bonferroni vs. Storey's q 
 
 ```{r, out.width = "50%", fig.align="center"}
 p.man <- normalizePath(file.path("figures/p-manhattan/Manhattan-plot_Petiole-Gall.png"))
 q.man <- normalizePath(file.path("figures/q-manhattan/Manhattan-plot_Petiole-Gall.png"))
-library(png);library(grid);library(gridExtra)
+
 img.1 <- rasterGrob(as.raster(readPNG(p.man)))
 img.2 <- rasterGrob(as.raster(readPNG(q.man)))
 grid.arrange(img.1,img.2,ncol = 1)
@@ -132,69 +165,68 @@ grid.arrange(img.1,img.2,ncol = 1)
 * significant q values contain all significant bonferroni p values
 
 # Results: Significant SNPs per Insect
+
 \scriptsize
+
+## 
+
 ```{r}
 knitr::kable(sig.n.table)
 ```
 
-\normalsize There are `r prettyNum(snps.n, big.mark = ",")` unique significant SNPs. 
-
-# Results: Common Associations
-
-* Of these `r prettyNum(snps.n, big.mark = ",")` unique SNPs, There are **`r common.n`** SNPs with multiple insect associations. These will be our SNPs of interest.
-
-* `r nrow(tab)` of these had associations with 3 insects and were contained in 1 gene:
-
-\scriptsize
-```{r}
-library(dplyr)
-knitr::kable(tab)
-bp.range <- range(bp)[2] - range(bp)[1]
-```
-
 \normalsize 
 
-* They are within `r bp.range` base pairs (LD/same gene)
+There are `r prettyNum(snps.n, big.mark = ",")` unique significant SNPs. 
 
-\scriptsize
 
-Note that these are the 2 **leaf-galling** and 1 **leaf-rolling** species. They are tightly associated with leaves. However, the gene annotation is not very insightful:
+# Insects:
 
-```{r}
-small.tab <- candidate.table %>% filter(n.assoc >2) %>% select(-n.assoc)
-small.tab.names <- c("Potri Gene","%match","Descr.","avg allele. freq")
-knitr::kable(small.tab,col.names = small.tab.names)
+```{r, out.width="100%",fig.align="center"}
+harm.image <- rasterGrob(readJPEG("study-photos/Harmandia-photo.png"))
+pet.image <- rasterGrob(readPNG("study-photos/Petiole-gall-picture.png"))
+phyl.image <- rasterGrob(readJPEG("study-photos/Phyllocolpa-picture.jpg"))
+smk.1 <- rasterGrob(readJPEG("study-photos/smokey-aphid-picture.png"))
+smk.ant <- rasterGrob(readJPEG("study-photos/smokey-aphid-ant-picture.png"))
+grn.aph <- rasterGrob(readPNG("study-photos/green-aphid-picture.png"))
+
+
+grid.arrange(harm.image,grn.aph,phyl.image,pet.image,smk.1,smk.ant,nrow = 2)
 ```
 
-(transmembrane oxireductases create electron-transport chains in chloroplasts and mitochondria)
 
-\normalsize
 
-# Results: Multiple-Manhattan Plot
 
-```{r multiman,fig.align='center', out.width="100%"}
+----
+
+## Results: Shared Associations
+
+```{r multiman,fig.align='center', out.width="100%",fig.align="left"}
 path <- normalizePath(file.path("figures/gg-multiManhattanPlot.png"))
 knitr::include_graphics(path)
 ```
 
+\scriptsize
+The matched genes of these `r common.n` shared association markers (red) 
+make up our candidate list.
+
 # Results: Imputed Gene Function
 
-Top matched genes with annotations imputed from congeneric *Populus trichocarpa*:
+## Top matched genes with annotations imputed from congeneric *Populus trichocarpa*:
 
 \tiny
 ```{r}
+library(dplyr)
 table <- candidate.table %>% select(-n.assoc) %>% head(n = 21)
+small.tab.names <- c("Potri Gene","%match","Descr.","avg allele. freq", "insects")
 knitr::kable(table, col.names = small.tab.names)
-
 average.freq <- mean(candidate.table$mean_alleleFreq)
 ```
 
-\tiny
 
-These annotations are vague and will require more research to determine 
-which make biological sense.
+<!-- These annotations are vague and will require more research to determine  -->
+<!-- which make biological sense. -->
 
-"*A. t.* **glucuronate:xylan alpha-glucuronosyltransferase 1**: Glycosyltransferase required for the addition of both glucuronic acid and 4-O-methylglucuronic acid branches to xylan in stem cell walls. ... is responsible for almost all of the substitutions of the xylan backbone in stem glucuronoxylan."
+<!-- "*A. t.* **glucuronate:xylan alpha-glucuronosyltransferase 1**: Glycosyltransferase required for the addition of both glucuronic acid and 4-O-methylglucuronic acid branches to xylan in stem cell walls. ... is responsible for almost all of the substitutions of the xylan backbone in stem glucuronoxylan." -->
 
 \normalsize
 
@@ -208,7 +240,7 @@ which make biological sense.
 
 ## Future Directions 
 
-* More thoroughly research gene annotations from congeneric *Populus trichocarpa* and model *Arabidopsis thaliana* to check biological function where possible
+* More thoroughly research gene annotations for *Populus trichocarpa* and model *Arabidopsis thaliana*.
 
 * Compare with other methods (multi-SNP, BLUP association, GBlups, etc)
 
@@ -217,16 +249,14 @@ which make biological sense.
 * Include more tree traits and environmental variables and interactions
 
 
+
+# Extra Slides
 <!-- for lab group -->
 <!-- Potential Problems -->
 
-# Extra Slides
-
-
-
 -----
 
-\tiny Extra Slides: Potential Issues (Simulated Data)
+\tiny Potential Issues (Simulated Data)
 
 ```{r, out.width="100%", out.height="95%"}
 n0 = n1 = round(genet.n/3)
@@ -276,26 +306,29 @@ toy.data3 <- data.frame(
 library(ggplot2)
 g1 <- ggplot(data = toy.data, aes(x = alleles.A, 
                             y = SNP.1, col = Genotype)) +
-  labs(x = "Alleles equal to reference allele",
+  labs(x = "",
          y = "Probability of Insect Presence",
        title = "Association with SNP 1 \nHypothesized Situation",
        subtitle = "Equal distribution of alleles") + 
+  theme(legend.position = "none") +
   geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black") 
 
 g2 <- ggplot(data = toy.data2, aes(x = alleles.A, 
                             y = SNP.2, col = Genotype)) +
-  labs(x = "Alleles equal to reference allele",
-         y = "Probability of Insect Presence",
+  labs(x = "",
+         y = "",
        title = "Association with SNP 2: \nHeterozygote Advantage",
        subtitle = "Uneven distribution of alleles") + 
+  theme(legend.position = "none") + 
   geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black")
 
 g3 <- ggplot(data = toy.data3, aes(x = alleles.A, 
                             y = SNP.3, col = Genotype)) +
   labs(x = "Alleles equal to reference allele",
-         y = "Probability of Insect Presence",
+         y = "",
        title = "Association with SNP 3: \nHeterozygote Advantage",
        subtitle = "Equal distribution of alleles") + 
+  theme(legend.position = "none") +
   geom_point() + geom_smooth(method = "lm", aes(col = NULL), col = "black")
 
 grid.arrange(g1,
@@ -311,27 +344,29 @@ grid.arrange(g1,
 
 Consider the following model for some response $Y$ on observation $j$:
 
-$$Y_j = \mu + X_j\beta + Z_j\tau + \varepsilon $$
+$$Y_j = X\beta + Z\tau + \varepsilon $$
 
-* $E(Y_j = X_j\beta)$
+* $E(Y_j = X\beta)$
 
-* $X_{j}$ and $Z_j$ are vectors of independent variables for the $j$th observation 
+* $X$ and $Z$ are design matrices of independent variable values for each observation 
 
 * $\beta$ is an unknown vector of regression parameters (fixed effects)
 
 * $\tau$ is an unknown vector of **random effects** 
 
-    * $E(\tau)=0$ and $Var(\tau)=G$; $G=Cov(\tau_m,\tau_k)$ for all $m$ and $k$
+    * $E(\tau)=0$ and $Var(\tau)=G$; $G$ is a variance-covariance matrix
 
 * $\varepsilon$ is an unknown vector of random errors
 
     * $E(\varepsilon)=0$ and $Var(\varepsilon)=R$
 
+* Many approaches differ by methods of estimating $G$ and $R$.
+
 ----
 
 ## LMM: Parameter Estimation
 
-$$Y_j = \mu + X_j\beta + Z_j\tau + \varepsilon$$
+$$Y_j = X\beta + Z\tau + \varepsilon$$
 
  * $\tau \sim N(0,G)$, $\varepsilon \sim N(0,R)$, and $Cov(\tau,\varepsilon)=0$
 
@@ -345,7 +380,7 @@ $$Y_j = \mu + X_j\beta + Z_j\tau + \varepsilon$$
 
  * $\hat{\beta}$ is a vector of best linear unbiased estimators (BLUEs) of fixed effects
 
- * $\hat{\tau}$ is a vector of best linear unbiased predictors (BLUPs) of fixed effects
+ * $\hat{\tau}$ is a vector of best linear unbiased predictors (BLUPs) of random effects
 
  * conditional variances (covariance matrices for $\beta$ and $\varepsilon$) are often unknown and are
 estimated as a nuisance parameter with Bayesian EM algorithm (`nlme`,`lme4`, etc.)
@@ -356,15 +391,15 @@ BLUPs are constrained coefficienct estimates of random effects.
 
 ----
 
-## Modern GWA Models
+## Hilary's GWA Model (**I think**)
 
 * First fit LMM for a trait of interest (Size) with $\beta_i$ fixed effects and $\tau_g$ random effects:
 
 $$\text{Size} = \mu +  \beta_1(\text{PGs}) + \beta_2(\text{CTs})+ \dots + \beta_n(\text{Trait}_n) + \tau_{g}(\text{Genet}_{g}) + \varepsilon$$
  
-* Then conduct a linear association analysis between the size-specific BLUPs $\tau$ and the Genotype of at SNP $s$ of each genet $g$:
+* Then conduct a linear association analysis between the size-specific BLUPs $\tau$ and the Genotype of at SNP $s$ of each genet $g$, possibly with other trait BLUPs as covariates:
 
-$$\tau_g = \mu +\alpha(\text{Genotype}_{s,g}) + \varepsilon$$
+$$\tau_{g,i} = \mu +\alpha(\text{Genotype}_{s,g}) + [\tau_{g,j}]+ \varepsilon$$
 
 ```{r, out.width="80%",fig.asp=.33,fig.align="center"}
 dat = data.frame(
@@ -384,3 +419,25 @@ ggplot(data = dat, aes(x = x, y = y, col = Genotype)) +
   
 ```
 
+----
+
+## Modern GWA Models
+
+$$ Y = \text{trait}_i\beta + \text{SNP}_j\tau $$
+
+Where:
+
+* SNP is a matrix of allele frequencies of each SNP for each individual
+
+* Most often SNPs are considered individually (single-marker GWA)
+
+However, they can be assessed together: this version has far more predictors than observation ($p > n$) which is statistically difficult.
+
+* Usually done with shrinkage approaches (often Bayesian) to remove SNPs with 
+weak effects. 
+
+## Or
+
+For predictive purposes, models that are re-fit with top $x$ SNP effects from
+single-marker GWA can perform as well or better than multi-marker models
+(Kristensen et al., 2018).

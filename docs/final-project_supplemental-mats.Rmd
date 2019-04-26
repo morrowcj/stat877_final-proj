@@ -70,6 +70,7 @@ candidate.table <- annotated.candidates %>% select(
                                 Functional_Description,
                                 n.assoc, 
                                 mean_alleleFreq, 
+                                Insect.Associations
                                 ) %>% 
   filter(!duplicated(Potri_Gene_ID)) %>% 
   arrange(desc(Percent_ID))
@@ -81,7 +82,7 @@ caption <- paste("SNPs of interest and the insects with which they have",
                  "significant associations")
 candidate.table
 
-save(list = c("candidate.table"),
+save(list = c("candidate.table", "annotated.candidates"),
      file = "data/GWA-annotated-candidate-table.RData")
 ```
 
