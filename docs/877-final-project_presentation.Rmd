@@ -75,17 +75,20 @@ traits (size, defense chemistry, nutrition, etc.).
 
 * 4 time periods (longitudinal)
 
-* `r prettyNum(SNP.N, big.mark = ",")` SNP regions with 3 possible genotypes 
-{0,1,2} <!-- # of alleles that match the reference allele -->
+* `r prettyNum(SNP.N, big.mark = ",")` SNP regions
+
+<!-- with 3 possible genotypes {0,1,2} -->
+<!-- # of alleles that match the reference allele -->
 
 
 # Statistical Model
 
-## $$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{g} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
+## Univariate SNP association model:
 
-Where:
+$$\text{logit}(p_{ijk_{g}}) = \beta_0 +\alpha \text{G}_{g} + x_{jk_{g}}^\intercal\beta + \varepsilon_{g(j)}$$
 
-* $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$
+<!-- * $\text{logit}(y)=\log\left(\frac{y}{1-y}\right)$ -->
+* SNPs considered independently
 
 * $p_{ijk_{g}}$: probability of observing $>0$ individual insects of species $i$
 during survey event $j$ on tree $k$ of genet $g$
@@ -101,15 +104,15 @@ survey event $j$
 
 A total of 2,059,560 ($18\text{ insects}\times114,420\text{ SNPs}$) GLMMs were fit.
 
-# Diagnostics: p value distributions
+<!-- # Diagnostics: p value distributions -->
 
-```{r,out.width="30%",out.height="45%"}
-insects <- c("Harmandia", "Petiole-Gall",
-             "Phyllocolpa","Blotch-Mine",
-             "Ants","Green-Sawfly")
-paths <- normalizePath(file.path("figures/p-hist",paste0("p-histogram-of_",insects,".png")))
-knitr::include_graphics(path = paths)
-```
+<!-- ```{r,out.width="30%",out.height="45%"} -->
+<!-- insects <- c("Harmandia", "Petiole-Gall", -->
+<!--              "Phyllocolpa","Blotch-Mine", -->
+<!--              "Ants","Green-Sawfly") -->
+<!-- paths <- normalizePath(file.path("figures/p-hist",paste0("p-histogram-of_",insects,".png"))) -->
+<!-- knitr::include_graphics(path = paths) -->
+<!-- ``` -->
 
 # Diagnostics: Bonferroni vs. Storey's q 
 
@@ -153,14 +156,17 @@ bp.range <- range(bp)[2] - range(bp)[1]
 
 * They are within `r bp.range` base pairs (LD/same gene)
 
+\scriptsize
+
 Note that these are the 2 **leaf-galling** and 1 **leaf-rolling** species. They are tightly associated with leaves. However, the gene annotation is not very insightful:
 
-\scriptsize
 ```{r}
 small.tab <- candidate.table %>% filter(n.assoc >2) %>% select(-n.assoc)
 small.tab.names <- c("Potri Gene","%match","Descr.","avg allele. freq")
 knitr::kable(small.tab,col.names = small.tab.names)
 ```
+
+(transmembrane oxireductases create electron-transport chains in chloroplasts and mitochondria)
 
 \normalsize
 
@@ -173,19 +179,24 @@ knitr::include_graphics(path)
 
 # Results: Imputed Gene Function
 
-The following is a few of our top (by % gene match) genes with annotations, imputed from congeneric *Populus trichocarpa*.
+Top matched genes with annotations imputed from congeneric *Populus trichocarpa*:
 
 \tiny
 ```{r}
-table <- candidate.table %>% select(-n.assoc) %>% head(n = 22)
+table <- candidate.table %>% select(-n.assoc) %>% head(n = 21)
 knitr::kable(table, col.names = small.tab.names)
 
 average.freq <- mean(candidate.table$mean_alleleFreq)
 ```
 
-\normalsize
+\tiny
 
-These annotations are vague and will require more research to determine which make biological sense.
+These annotations are vague and will require more research to determine 
+which make biological sense.
+
+"*A. t.* **glucuronate:xylan alpha-glucuronosyltransferase 1**: Glycosyltransferase required for the addition of both glucuronic acid and 4-O-methylglucuronic acid branches to xylan in stem cell walls. ... is responsible for almost all of the substitutions of the xylan backbone in stem glucuronoxylan."
+
+\normalsize
 
 # Discussion
 
